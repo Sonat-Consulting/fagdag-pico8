@@ -1,8 +1,8 @@
 **Ideer til spill å "remake" evt "demake":**
 
-Pac-man
-Pong
-Snake
+- Pac-man
+- Pong
+- Snake
 Breakout
 Lunar Lander
 Missile command
