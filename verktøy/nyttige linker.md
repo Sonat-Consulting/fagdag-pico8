@@ -9,7 +9,19 @@ https://neko250.github.io/pico8-api/
 IDE / Editor (kjekk når man blir lei av begrenset skjermstørrelse / oppløsning for å jobbe i):
 https://github.com/movAX13h/P8Coder
 
+Konvertere bilder til PICO8-format:
+8Bit Photo Lab (Android)
+
+Hvordan hente inn grafikk til PICO-8:
+- Eksportere current spritesheet til PNG
+  - Kjør kommandoen **EXPORT FILNAVN.PNG**
+- Redigere PNG i ekstern applikasjon
+  - kjør kommandoen **FOLDER**
+- Importere tilbake spritesheet i PICO-8
+  - Kjør kommandoen **IMPORT FILNAVN.PNG**
+
 Coroutines: https://docs.google.com/document/d/14HzJnqKdVtBjN2vN9-rZHLR3rlgwWwDym8ehzhKRqFo/edit
+
 Lyd-tutorial: https://www.reddit.com/r/pico8/comments/3ogo81/pico8_music_tracker_tutorial_series/
 
 Museinput: 
