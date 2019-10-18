@@ -15,7 +15,7 @@ I tillegg til spill kan det være gøy å utvikle noen selvkjørende demoer. Noe
 - Parallax scroll
 - Raster bars
 - Tunnell
-* Plasma
+- Plasma
 - 3D wireframe
 
 
