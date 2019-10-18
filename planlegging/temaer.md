@@ -25,21 +25,20 @@
     - mot vegg / kant av skjerm
     - mot kjente områder (paddle, brick, etc)
 
-7. Sprites
+# Snake(?)
+1. Sprites
 1. Animasjon, state
 1. Map
 1. Kollisjoner 2
-10. Ytelse
 
 
-**Avanserte:**
-Trigonometri
-Entity component systems
-Lyd/Musikk
-Partikkelsystemer
-Coroutines
-AI, pathfinding (A*) 
-Minnelayout
-GPIO (kan brukes til kommunikasjon med javascript)
-
-
+# Avanserte temaer
+- Ytelse
+- Trigonometri
+- Entity component systems
+- Lyd/Musikk
+- Partikkelsystemer
+- Coroutines
+- AI, pathfinding (A*) 
+- Minnelayout
+- GPIO (kan brukes til kommunikasjon med javascript)
