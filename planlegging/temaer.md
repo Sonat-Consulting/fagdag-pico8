@@ -1,4 +1,4 @@
-#PONG#
+# PONG
 
 1. Installasjon, oppsett av pico-8
    - kommandoer
