@@ -9,13 +9,13 @@
 
 I tillegg til spill kan det være gøy å utvikle noen selvkjørende demoer. Noen ideer til effekter man kan prøve å implementere her:
 
-Sprettball
-Sinus-scroller
-Matrix
-Parallax scroll
-Raster bars
-Tunnell
-Plasma
-3D wireframe
+- Sprettball
+- Sinus-scroller
+- Matrix
+- Parallax scroll
+- Raster bars
+- Tunnell
+v Plasma
+- 3D wireframe
 
 
