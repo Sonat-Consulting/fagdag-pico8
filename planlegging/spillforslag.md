@@ -1,23 +1,24 @@
 **Ideer til spill å "remake" evt "demake":**
 
-- Pac-man
 - Pong
+- Flappy bird
+- Pac-man
 - Snake
-Breakout
-Lunar Lander
-Missile command
-Paratroopers
-Asteroids
-Space Invaders
-Tetris
-Choplifter
-Flappy bird
+- Breakout
+- Lunar Lander
+- Missile command
+- Paratroopers
+- Asteroids
+- Space Invaders
+- Tetris
+- Choplifter
 
 *(antakeligvis) for ambisiøst for fagdag (?):*
-Platformspill ala Super Mario
-Adventure ala Legend of Zelda
-Racing game (Slicks n Slides)
-RTS / RTA : Cannon Fodder, Dune 2
+- Super Mario
+- Legend of Zelda
+- Slicks n Slides
+- Cannon Fodder
+- Dune 2
 
 
 
