@@ -1,10 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 18
 __lua__
---globals
---by terje wiesener
 
---Game
+--globals
 btnup = 2
 btndown = 3
 
@@ -13,80 +11,8 @@ paddleheight = 24
 paddlemargin = 2
 
 gamespeed=2
--->8
---update
-function _update()
-  t += 1
-  if ball.velx < 0 then checkcollision(paddle1)
-  else checkcollision(paddle2) end
-  checkbounds()
 
-  ball.x += ball.velx * gamespeed
-  ball.y += ball.vely * gamespeed
-  paddle1:move()
-  paddle2:move()
-end
-
-function checkcollision(paddle)
-  if (ball.y) < paddle:top() then return end
-  if (ball.y) > paddle:bottom() then return end
-  
-  local collision = false
-  
-  if ball.velx > 0 then
-      --ball moving right, check left edge:
-      collision = ball.x < paddle:left() and ball.x + ball.size >= paddle:left()
-  else
-      --ball movung left, check right edge
-    collision = ball.x > paddle:right() and ball.x - ball.size <= paddle:right()
-  end
-  if collision then
-			 --reverse ball direction
-	   ball.velx = -ball.velx
-    --offset the ball y direction depending on which side was hit
-    local dist = ball.y - paddle:center()
-    ball.vely += dist / paddleheight
-  end
-end
-
-function reset()
-    ball.x = 64  
-    ball.y = 64    
-    ball.vely = 2 - rnd(4)
-end
-  
-function checkbounds()
-  if ball.x < ball.size then
-    --ballen er utenfor venstre side, poeng til spiller2
-    paddle2.points += 1
-    reset()
-  end
-  if ball.x > 128 - ball.size then
-    --ballen er utenfor venstre side, poeng til spiller2
-    paddle1.points += 1
-    reset()
-  end
-  if ball.y > 128 - ball.size or ball.y < ball.size then
-    ball.vely = -ball.vely
-  end
-end
-
--->8
---drawing
-function _draw()
-  cls(7)
-  paddle1:draw()
-  paddle2:draw()
-  drawball(ball)
-  print(paddle1.points, 1, 1, 0)
-  print(paddle2.points, 117, 0, 0)
-end
-
-function drawball(ball)
-  circfill(ball.x, ball.y, ball.size, ball.col)
-  circ(ball.x, ball.y, ball.size, 5)
-end
-
+ballsize = 2
 
 -->8
 --init
@@ -98,23 +24,72 @@ function _init()
   
   paddle1 = paddle:new()
   paddle1.color = 11
-  
+  paddle1.player = 1
+
   paddle2 = paddle:new()
   paddle2.x = 128 - paddlewidth - paddlemargin
-		paddle2.color = 12
+  paddle2.color = 12
   
-  ball = 
-  {
-    x = 64,
-    y = 64,
-    size = 2,
-    col = 15,
-    velx = 1,
-    vely = 0
-  }
-  
+  myball = ball:new()
 end
 
+-->8
+--update
+function _update()
+  t += 1
+  if myball.velx < 0 then 
+    checkcollision(paddle1, myball)
+  else 
+    checkcollision(paddle2, myball) 
+  end
+  
+  local point = myball:checkbounds()
+  if point > 0 then
+    if point == 1 then 
+      paddle1.points += 1
+    elseif point == 2 then
+      paddle2.points += 1
+    end
+  end
+
+  paddle1:move()
+  paddle2:move()
+  myball:move()
+end
+
+function checkcollision(paddle, ball)
+  if (ball.y) < paddle:top() then return end
+  if (ball.y) > paddle:bottom() then return end
+  
+  local hitpaddle = false
+  
+  if ball.velx > 0 then
+    --ball moving right, check left edge:
+    hitpaddle = ball.x < paddle:left() and ball.x + ball.size >= paddle:left()
+  else
+      --ball moving left, check right edge
+      hitpaddle = ball.x > paddle:right() and ball.x - ball.size <= paddle:right()
+  end
+  if hitpaddle then
+    --reverse ball direction
+    ball.velx = -ball.velx
+    --offset the ball y direction depending on which side was hit
+    local dist = ball.y - paddle:center()
+    ball.vely += dist / paddleheight
+  end
+end
+
+
+-->8
+--drawing
+function _draw()
+  cls(7)
+  paddle1:draw()
+  paddle2:draw()
+  myball:draw()
+  print(paddle1.points, 1, 1, 0)
+  print(paddle2.points, 117, 0, 0)
+end
 
 -->8
 --paddle
@@ -132,7 +107,13 @@ paddle = {
 	player = 0
 }
 
---paddle functions
+--paddle constructor:
+function paddle:new(o)
+	self.__index = self
+	return setmetatable(o or {}, self)
+end
+
+--paddle methods
 function paddle.top(p) 
 	return p.y
 end
@@ -154,9 +135,9 @@ function paddle.center(p)
 end
 	
 function paddle.aimove(p)
-  if p:top() > ball.y - ball.size then 
+  if p:top() > myball.y - myball.size then 
     p.direction = -1 
-  elseif p:bottom() < ball.y + ball.size then 
+  elseif p:bottom() < myball.y + myball.size then 
     p.direction = 1 
   else 
     p.direction = 0
@@ -198,17 +179,56 @@ function paddle.draw(p)
   rect(x, y, x1, y1, 0)
 end
 
---paddle constructor:
-function paddle:new(o)
+-->8
+--ball
+
+--ball default values
+ball = 
+{
+  x = 64,
+  y = 64,
+  size = ballsize,
+  col = 15,
+  velx = 1,
+  vely = 0
+}  
+
+--ball constructor:
+function ball:new(o)
 	self.__index = self
 	return setmetatable(o or {}, self)
 end
 
+--ball methods
+function ball.draw(ball)
+  circfill(ball.x, ball.y, ball.size, ball.col)
+  circ(ball.x, ball.y, ball.size, 5)
+end
 
-__gfx__
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00700700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00077000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00077000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00700700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+function ball.reset(ball)
+  ball.x = 64  
+  ball.y = 64    
+  ball.vely = 2 - rnd(4)
+end
+
+function ball.checkbounds(ball)
+  if ball.x < ball.size then
+    --ball has exited on left hand side, points to player 2
+    ball:reset()
+    return 2
+  end
+  if ball.x > 128 - ball.size then
+    --ball has exited on right hand side, points to player 1
+    ball:reset()
+    return 1
+  end
+  if ball.y > 128 - ball.size or ball.y < ball.size then
+    ball.vely = -ball.vely
+  end
+  return -1
+end
+
+function ball.move(ball)
+  ball.x += ball.velx * gamespeed
+  ball.y += ball.vely * gamespeed
+end
