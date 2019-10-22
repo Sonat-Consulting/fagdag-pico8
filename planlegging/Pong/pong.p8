@@ -43,11 +43,11 @@ function _update()
     checkcollision(paddle2, myball) 
   end
   
-  local point = myball:checkbounds()
-  if point > 0 then
-    if point == 1 then 
+  local side = myball:checkbounds()
+  if side != nil then
+    if side == "right" then 
       paddle1.points += 1
-    elseif point == 2 then
+    elseif side == "left" then
       paddle2.points += 1
     end
   end
@@ -114,68 +114,68 @@ function paddle:new(o)
 end
 
 --paddle methods
-function paddle.top(p) 
-	return p.y
+function paddle:top() 
+	return self.y
 end
 	
-function paddle.bottom(p) 
-	return p.y + p.height
+function paddle:bottom() 
+	return self.y + self.height
 end
 	
-function paddle.left(p) 
-	return p.x
+function paddle:left() 
+	return self.x
 end
 	
-function paddle.right(p) 
-	return p.x + p.width
+function paddle:right() 
+	return self.x + self.width
 end
 	
-function paddle.center(p) 
-	return p.y + (p.height / 2)
+function paddle:center() 
+	return self.y + (self.height / 2)
 end
 	
-function paddle.aimove(p)
-  if p:top() > myball.y - myball.size then 
-    p.direction = -1 
-  elseif p:bottom() < myball.y + myball.size then 
-    p.direction = 1 
+function paddle:aimove()
+  if self:top() > myball.y - myball.size then 
+    self.direction = -1 
+  elseif self:bottom() < myball.y + myball.size then 
+    self.direction = 1 
   else 
-    p.direction = 0
+    self.direction = 0
   end
 end
 
-function paddle.playermove(p)
+function paddle:playermove()
   if btn(btnup) then 
-  	p.direction = -1
+  	self.direction = -1
   elseif btn(btndown) then 
-  	p.direction = 1
+  	self.direction = 1
   else
-  	p.direction = 0
+  	self.direction = 0
 		end
 end
 
-function paddle.move(p)
-	if p.player == 0 then
-		p:aimove()
+function paddle:move()
+	if self.player == 0 then
+		self:aimove()
 	else
-		p:playermove()
+		self:playermove()
  end
 
-	p.y += p.direction * p.speed * gamespeed
-	p.y = clamp(p:top(), 0, paddlemax)
+	self.y += self.direction * self.speed * gamespeed
+	self.y = clamp(self:top(), 0, paddlemax)
 end
 
 function clamp(val, minval, maxval)
     return min(maxval, max(minval, val))
 end
   
-function paddle.draw(p)
-  local x = p:left()
-  local y = p:top()
-  local x1 = p:right() - 1
-  local y1 = p:bottom() - 1
+function paddle:draw()
+  local x = self:left()
+  local y = self:top()
+  local x1 = self:right() - 1
+  local y1 = self:bottom() - 1
   
-  rectfill(x, y, x1, y1, p.color)
+  rectfill(x, y, x1, y1, self.color)
   rect(x, y, x1, y1, 0)
 end
 
@@ -200,35 +200,35 @@ function ball:new(o)
 end
 
 --ball methods
-function ball.draw(ball)
-  circfill(ball.x, ball.y, ball.size, ball.col)
-  circ(ball.x, ball.y, ball.size, 5)
+function ball:draw()
+  circfill(self.x, self.y, self.size, self.col)
+  circ(self.x, self.y, self.size, 5)
 end
 
-function ball.reset(ball)
-  ball.x = 64  
-  ball.y = 64    
-  ball.vely = 2 - rnd(4)
+function ball:reset()
+  self.x = 64  
+  self.y = 64    
+  self.vely = 2 - rnd(4)
 end
 
-function ball.checkbounds(ball)
-  if ball.x < ball.size then
+function ball:checkbounds()
+  if self.x < self.size then
     --ball has exited on left hand side, points to player 2
-    ball:reset()
-    return 2
+    self:reset()
+    return "left"
   end
-  if ball.x > 128 - ball.size then
+  if self.x > 128 - self.size then
     --ball has exited on right hand side, points to player 1
-    ball:reset()
-    return 1
+    self:reset()
+    return "right"
   end
-  if ball.y > 128 - ball.size or ball.y < ball.size then
-    ball.vely = -ball.vely
+  if self.y > 128 - self.size or self.y < self.size then
+    self.vely = -self.vely
   end
-  return -1
+  return nil
 end
 
-function ball.move(ball)
-  ball.x += ball.velx * gamespeed
-  ball.y += ball.vely * gamespeed
+function ball:move()
+  self.x += self.velx * gamespeed
+  self.y += self.vely * gamespeed
 end
