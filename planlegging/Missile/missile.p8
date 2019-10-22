@@ -1,53 +1,25 @@
 pico-8 cartridge // http://www.pico-8.com
 version 18
 __lua__
+--gameloop
 
 function _init()
     t = 0
     
-    --enable mouse:
-    poke(0x5F2D, 1)
+    mouse = mouse:new()
+    mouse:init()
 
     explosions = {}
-
-    button1 = 1
-    button2 = 2
-    button3 = 4
-    buttons = {button1,button2, button3}
-
-    prevstate = 0
-end
-function clamp(num, minval, maxval)
-    return max(min(num, maxval), minval)
-end
-
-function getmousepos()
-    x = clamp(stat(32), 0, 128)
-    y = clamp(stat(33), 0, 128)
-    return x, y
-end
-
-function checkmousebuttons()
-    local buttonstate = stat(34)
-
-    pressed = {}
-    for button in all(buttons) do
-        local isdown = band(buttonstate, button) > 0
-        local wasdown = band(prevstate, button) > 0
-        pressed[button] = isdown and not wasdown
-    end
-    prevstate = buttonstate
-    return pressed
 end
 
 function _update()
-    mousex, mousey = getmousepos()
-    pressed = checkmousebuttons()
+    mouse:update()
 
-    if pressed[button1] then
-        local explosion = explosion:new({x = mousex, y = mousey, starttime = t})
+    if mouse:isdown(buttons.left) then
+        local explosion = explosion:new({x = mouse.x, y = mouse.y, starttime = t})
         add(explosions, explosion)
     end
+
     for ex in all(explosions) do
         if not ex:isalive() then
             del(explosions, ex)
@@ -55,6 +27,7 @@ function _update()
             ex:update()
         end
     end
+
     t += 1
 end
 
@@ -63,12 +36,18 @@ function _draw()
     for ex in all(explosions) do
         ex:draw()
     end
-    camera(4,4)
-    spr(0, mousex, mousey)
-    camera(0,0)
+    mouse:draw()
 end
 
-mousebuttons = {
+
+-->8
+--mouse
+
+function clamp(num, minval, maxval)
+    return max(min(num, maxval), minval)
+end
+
+buttons = {
     left = 1,
     right = 2,
     middle = 4
@@ -77,24 +56,61 @@ mousebuttons = {
 mouse = {
     x = 0, 
     y = 0,
-    currentstate = 0,
-    previousstate = 0,
-    down = {}
-    pressed = {}
-    released = {}
+    down = {},
+    wasdown = {}
 }
 
+function mouse:new(o)
+	self.__index = self
+	return setmetatable(o or {}, self)
+end
+
+function mouse:init()
+    --enable mouse:
+    poke(0x5F2D, 1)
+end
+
+function mouse:isdown(v)
+    return self.down[v]
+end
+
+function mouse:ispressed(v)
+    return self.down[v] and not self.wasdown[v]
+end
+
+function mouse:isreleased(v)
+    return self.wasdown[v] and not self.down[v]
+end
+
+function mouse:update()
+    self.x = clamp(stat(32), 0, 128)
+    self.y = clamp(stat(33), 0, 128)
+    
+    local buttonstate = stat(34)
+    
+    for k,v in pairs(buttons) do
+        self.wasdown[v] = self.down[v]
+        self.down[v] = band(buttonstate, v) > 0
+    end
+end
+
+function mouse:draw()
+    camera(4,4)
+    spr(0, self.x, self.y)
+    camera(0,0)
+end
+
+-->8
+--explosion
 
 explosion = {
-    x = 64, 
-    y = 64,
-    starttime = 0,
     duration = 30,
     maxradius = 20,
     radius = 0,
     alive = true
 }
 
+--call with {x=...,y=...,starttime=...}
 function explosion:new(o)
 	self.__index = self
 	return setmetatable(o or {}, self)
