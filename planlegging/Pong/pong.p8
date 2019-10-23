@@ -10,7 +10,7 @@ paddlewidth = 4
 paddleheight = 24
 paddlemargin = 2
 
-gamespeed=2
+gamespeed=1.5
 
 ballsize = 2
 

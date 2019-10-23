@@ -15,8 +15,8 @@ end
 function _update()
     mouse:update()
 
-    if mouse:isdown(buttons.left) then
-        local explosion = explosion:new({x = mouse.x, y = mouse.y, starttime = t})
+    if mouse:ispressed(buttons.left) then
+        local explosion = explosion:new({x = mouse.x, y = mouse.y})
         add(explosions, explosion)
     end
 
@@ -110,10 +110,14 @@ explosion = {
     alive = true
 }
 
---call with {x=...,y=...,starttime=...}
+--call with {x=...,y=...,}
 function explosion:new(o)
-	self.__index = self
-	return setmetatable(o or {}, self)
+    --self is the "default" explosion table declared earlier
+    self.__index = self
+    local obj = setmetatable(o or {}, self)
+    -- obj is our new, "constructed" instance
+    obj.starttime = t
+    return obj
 end
 
 function explosion:draw()

@@ -67,7 +67,7 @@ function _update()
  	    length += 1
  	    spawnfood()
     end 
-    add(trail, {x = x,y = y})
+    add(trail, {x = x, y = y})
     if #trail > length then
         del(trail, trail[1])
     end
@@ -76,14 +76,14 @@ end
 
 function gameover()
 	alive = false
-	cursor(50, 50, 0)
+	cursor(30, 30, 0)
 	print("game over")
 	print("score: "..length - 2)
 	print("press ❎ to restart")
 end
 	
 function checkinput()
-	if btn(⬆️) and diry != 1 then 
+	if btn(⬆️) and diry != 1 then
 		diry = -1
 		dirx = 0
 	elseif btn(⬇️) and diry != -1 then
