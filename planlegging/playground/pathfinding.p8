@@ -7,13 +7,10 @@ function _init()
   mapy = 0
 
   starttile, endtile = findstartend(mapx,mapy)
-  heuristic = function(a,b)
-    return coord.manhattandist(a,b)
-  end
 
   path = {}
   callastar = function()
-    return astar(starttile, endtile, heuristic, path)
+    return astar(starttile, endtile, coord.manhattandist, path)
   end
 
   cr = cocreate(callastar)  
