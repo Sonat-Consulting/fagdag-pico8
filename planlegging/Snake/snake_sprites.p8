@@ -17,6 +17,8 @@ function reset()
     spawnfood()
     dirx = 1
     diry = 0
+    movingx = dirx
+    movingy = diry
     alive = true
 end
 
@@ -51,9 +53,11 @@ function _update()
 
     t += 1
     if t % tilesize != 0 then return end
-
+    
     x += dirx
     y += diry
+    movingx = dirx
+    movingy = diry
 
     if x < 0 or x >= width  or y < 0 or y >= height then
         gameover()
@@ -64,7 +68,7 @@ function _update()
     if not alive then return end
 
     if x == foodx and y == foody then
- 	    length += 1
+ 	    length += 3
  	    spawnfood()
     end 
     add(trail, {x = x, y = y})
@@ -83,16 +87,16 @@ function gameover()
 end
 	
 function checkinput()
-	if btn(⬆️) and diry != 1 then
+	if btn(⬆️) and movingy != 1 then
 		diry = -1
 		dirx = 0
-	elseif btn(⬇️) and diry != -1 then
+	elseif btn(⬇️) and movingy != -1 then
 		diry = 1
 		dirx = 0
-	elseif btn(⬅️) and dirx != 1 then
+	elseif btn(⬅️) and movingx != 1 then
 	    dirx = -1
 	    diry = 0
-	elseif btn(➡️) and dirx != -1 then
+	elseif btn(➡️) and movingx != -1 then
 	    dirx = 1
 	    diry = 0
 	end
@@ -100,7 +104,7 @@ end
 
 function _draw()
     if not alive then return end
-    cls(7)
+    cls(3)
 	for segment in all(trail) do
 		drawsegment(segment)
 	end
@@ -121,7 +125,7 @@ function drawfood()
 	spr(2, foodx * tilesize, foody * tilesize)
 end
 __gfx__
-03300000044000000990000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-3bb300004884000099f9000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-3bb30000488400009f99000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-03300000044000000990000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0cc00000044000000990000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+ce0c00004884000099f9000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+c0ec0000488400009f99000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0cc00000044000000990000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
