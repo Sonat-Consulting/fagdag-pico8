@@ -6,14 +6,16 @@ function _init()
   mapx = 0
   mapy = 0
 
-  starttile, endtile = findstartend(mapx,mapy)
+  local starttile, endtile = findstartend(mapx,mapy)
 
   path = {}
   callastar = function()
-    return astar(starttile, endtile, coord.manhattandist, path)
+    -- return astar(starttile, endtile, coord.manhattandist, path, false)
+    return astar(starttile, endtile, coord.chebyshevdist, path, true)
   end
 
-  cr = cocreate(callastar)  
+  cr = cocreate(callastar)
+  -- callastar()
   cls()
   map(mapx,mapy,0,0,128,128)
   print("s", starttile.x * 8, starttile.y * 8, 15)
@@ -22,8 +24,10 @@ end
 
 function _update()
   if (btnp(❎)) then
-    if costatus(cr) != "dead" then
+    if cr != nil and costatus(cr) != "dead" then
       coresume(cr)
+    else
+      cr = nil
     end
   end
 end
@@ -31,7 +35,7 @@ end
 function _draw()
 end
 
-function findstartend(mapno)
+function findstartend(mapx, mapy)
   local starttile = nil
   local endtile = nil
 
@@ -67,12 +71,32 @@ function coord.__sub(a,b)
   return coord:construct(a.x-b.x, a.y-b.y)
 end
 
+function coord.__mul(a,b)
+  return coord:construct(a.x*b, a.y*b)
+end
+
 function coord:construct(x,y)
   return coord:new({x=x,y=y})
 end
 
+function coord:copy(other)
+  return coord:new({x=other.x, y=other.y})
+end
+
+function coord.dist(a, b)
+  local dx = a.x - b.x
+  local dy = a.y - b.y
+  return sqrt(dx^2 + dy^2) 
+end
+
 function coord.manhattandist(a, b)
   return abs(a.x - b.x) + abs(a.y - b.y)
+end
+
+function coord.chebyshevdist(a, b)
+  local dx = abs(a.x - b.x)
+  local dy = abs(a.y - b.y)
+  return max(dx,dy)
 end
 
 function coord:isoutside()
@@ -83,6 +107,12 @@ function coord:print(str, col)
   print(str, self.x * 8, self.y * 8, col)
 end
 
+function coord:drawcircle(radius, col, filled)
+  local func = circ
+  if filled then func = circfill end
+  func(self.x * 8 + 4, self.y * 8 + 4, radius, col)
+end
+
 function find(table, value)
   for item in all(table) do
     if item == value then
@@ -91,20 +121,33 @@ function find(table, value)
   end
 end
 
-function astar(start, goal, heuristic)
-  open = {}
-  closed = {}
-  directions = {
+
+function astar(start, goal, heuristic, path, diagonal)
+  local open = {}
+  local closed = {}
+  local directions = {
     coord:construct(-1,0),
     coord:construct(1,0),
     coord:construct(0,-1),
-    coord:construct(0,1)
+    coord:construct(0,1),
   }
+  if diagonal then
+    local cross = {
+      coord:construct(-1,-1),
+      coord:construct(-1,1),
+      coord:construct(1,-1),
+      coord:construct(1,1)
+    }
+    for dir in all(cross) do
+      add(directions, dir)
+    end
+  end
+
   addopen(open, nil, start, heuristic, goal, path)
   while #open > 0 do
-    current = takelowest(open)
+    local current = takelowest(open)
     add(closed, current)
-    current:print("█", 12)
+    current:drawcircle(4, 10, false)
     
     if current == goal then
       buildpath(current, path)
@@ -112,7 +155,7 @@ function astar(start, goal, heuristic)
     end
 
     for offset in all(directions) do
-      neighbour = current + offset
+      local neighbour = current + offset
 
       if find(closed, neighbour) then
         --ignore        
@@ -134,9 +177,8 @@ function buildpath(coord, path)
   add(path, node)
   while node.parent != nil do
     add(path, node.parent)
-    line(node.x * 8 + 4, node.y * 8 + 4, node.parent.x * 8 + 4, node.parent.y * 8 + 4, 7)
+    -- line(node.x * 8 + 4, node.y * 8 + 4, node.parent.x * 8 + 4, node.parent.y * 8 + 4, 7)
     node = node.parent
-    yield()
   end
 end
 
@@ -154,6 +196,7 @@ function addopen(open, parent, coord, heuristic, goal)
   end
   coord.h = heuristic(coord, goal)
   coord.f = coord.g + coord.h
+  coord.e = coord.dist(coord, goal)
 
   for c in all(open) do
     if c == coord then
@@ -170,12 +213,16 @@ function addopen(open, parent, coord, heuristic, goal)
 end
 
 function takelowest(list)
-  lowest = list[#list]
-  for i=#list,1,-1 do
   -- lowest = list[1]
   -- for i=1,#list do
+    lowest = list[#list]
+  for i=#list,1,-1 do
     other = list[i]
-    if other.f < lowest.f then lowest = other end
+    if other.f < lowest.f then 
+      lowest = other
+    elseif other.f == lowest.f and other.e < lowest.e then
+      lowest = other
+    end
   end
   del(list, lowest)
   return lowest
