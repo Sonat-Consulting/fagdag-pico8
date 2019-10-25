@@ -1,19 +1,20 @@
 **Ideer til spill å "remake" evt "demake":**
 
+- Snake
 - Pong
+- Missile command
 - Flappy bird
 - Pac-man
-- Snake
 - Breakout
 - Lunar Lander
-- Missile command
 - Paratroopers
 - Asteroids
 - Space Invaders
 - Tetris
 - Choplifter
+- Star Control mêlee
 
-*(antakeligvis) for ambisiøst for fagdag (?):*
+**(antakeligvis) for ambisiøst for fagdag (?):**
 - Super Mario
 - Legend of Zelda
 - Slicks n Slides

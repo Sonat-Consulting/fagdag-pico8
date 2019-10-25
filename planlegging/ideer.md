@@ -1,11 +1,11 @@
-*Forberedelser IRL*
+## Forberedelser IRL
 
 - Printe ut Cheat Sheets
 - Kjøpe inn lisenser?
 - Skaffe noen spillkontrollere
 - Sette opp en dedikert "arkade"-maskin?
 
-*Demoer*
+## Demoer
 
 I tillegg til spill kan det være gøy å utvikle noen selvkjørende demoer. Noen ideer til effekter man kan prøve å implementere her:
 
@@ -17,5 +17,6 @@ I tillegg til spill kan det være gøy å utvikle noen selvkjørende demoer. Noe
 - Tunnell
 - Plasma
 - 3D wireframe
-
+- Fireworks
+- Snow
 
