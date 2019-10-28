@@ -5,13 +5,13 @@ __lua__
 x=4
 y=4
 
-x2 = 124
-y2 = 124
+x2 = 123
+y2 = 123
 
 x3 = 4
-y3 = 124
+y3 = 123
 
-x4 = 124
+x4 = 123
 y4 = 4
 
 cor = nil
@@ -20,7 +20,7 @@ cor3 = nil
 cor4 = nil
 
 function anim()
-  for i=4,120,4 do
+  for i=4,123,1 do
     x=i
     y=i
     yield()
@@ -28,25 +28,25 @@ function anim()
 end
 
 function anim2()
-  for i=120,4,-4 do
-    x2=i+4
-    y2=i+4
+  for i=123,4,-1 do
+    x2=i
+    y2=i
     yield()
   end
 end
  
 function anim3()
-  for i=4,120,4 do
+  for i=4,123,1 do
     x3=i
-    y3=120 - i + 4
+    y3=127 - i
     yield()
   end
 end
 
 function anim4()
-  for i=120,4,-4 do
-    x4=i+4
-    y4=120-i +8
+  for i=123,4,-1 do
+    x4=i
+    y4=127-i
     yield()
   end
 end
@@ -85,8 +85,14 @@ end
  
 function _draw()
   cls(13)
+  rect(0,0,127,127, 1)
   circfill(x, y, 4, 12)
   circfill(x2, y2, 4, 8)
   circfill(x3, y3, 4, 11)
   circfill(x4, y4, 4, 3)
+
+  print("1:("..x..","..y..")", 1, 53, 12)
+  print("2:("..x2..","..y2..")", 1, 58, 8)
+  print("3:("..x3..","..y3..")", 1, 64, 11)
+  print("4:("..x4..","..y4..")", 1, 70, 3)
 end
