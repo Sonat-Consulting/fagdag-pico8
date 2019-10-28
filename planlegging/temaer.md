@@ -60,6 +60,8 @@
     - https://en.wikipedia.org/wiki/Chebyshev_distance
 - Sprite-animasjon
 - Ytelse
+- Dithering
+    - https://trasevol.dog/2017/02/01/doodle-insights-2-procedural-dithering-part-1/
 - Trigonometri
 - Entity component systems
 - Lyd/Musikk
