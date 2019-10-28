@@ -13,22 +13,35 @@ music(0)
 --><~^`
 --0123456789
 
-function slide1()
-	local strings = {
-		"-  velkommen til fagdag!",
-		"",
-		"-i dag skal vi tilbake til",
-		"          ca 1984",
-		"",
-		"-  vi har et tett program",
-		"   s★ pr🅾️v ★ holde f🅾️lge",
-		"",
-		
- 	}
-	return makeslide("fagdag sonat", strings, bullets)
+function buildslides()
+	return {
+		intro(),
+		counter(),
+		credits(),
+		credits2(),	
+	}
 end
 
-function slide2()
+
+function intro()	
+	return makeslide("fagdag sonat", 
+	{
+		"-    velkommen til fagdag!    ",
+		"                              ",
+		"                              ",
+		"-i dag skal vi ta dere tilbake",
+		"                              ",
+		"-     til rundt ★r 1984       ",
+		"                              ",
+		"                              ",
+		"                              ",
+		"                              ",
+		"                              ",
+		"                              ",
+	})
+end
+
+function counter()
 	local mytime = 0
 	local init = function()
 		mytime = 0
@@ -41,22 +54,38 @@ function slide2()
 	return makecustomslide("custom slide!", init, draw)
 end
 
-function slide3()
-	return makeslide("empty slide", {}, {})
+function credits()
+	return makeslide("credits", 
+	{
+		"-            idea             ",
+		"        terje wiesener        ",
+		"                              ",
+		"- content, code, presentation ",
+		"         hadrien kohl         ",
+		"         igor erokhin         ",
+		"        terje wiesener        ",
+		"                              ",
+		"-            music            ",
+		"         david fredman        ",
+		"                              ",
+	})
 end
 
-function slide4()
-	local content = {
-		"-based on cart \"pico slides\"", 
-		"  by user egvroom", 
-		"",
-		"-see", 
-		"",
-		"  https://www.lexaloffle.com/", 
-		"       bbs/?tid=33347"
-	}
-
-	return makeslide("closing remarks", content)
+function credits2()
+	return makeslide("credits (contd)", 
+	{
+		"-    presentation framework   ",
+		"  based on cart \"pico slides\" ",
+		"       by user egvroom        ",
+		"                              ",
+		"             see              ", 
+		"  https://www.lexaloffle.com/ ", 
+		"       bbs/?tid=33347         ",
+		"                              ",
+		"                              ",
+		"                              ",
+		"                              ",
+	})
 end
 
 
@@ -72,10 +101,10 @@ function makeslide(title, rawstrings)
 	local strings = {}
 	for str in all(rawstrings) do
 		if sub(str,1,1) == "-" then
-			add(strings, " " .. sub(str, 2, #str))
+			add(strings, sub(str, 2, #str))
 			add(bullets, 1)
 		else
-			add(strings, str)
+			add(strings, " " .. str)
 			add(bullets, 0)
 		end
 	end
@@ -110,13 +139,7 @@ slidestrings = {}
 bulletx = {}
 bulletcolor = {}
 
-slides = {
-	slide1(),
-	slide2(),
-	slide3(),
-	slide4(),
-}
-
+slides = buildslides()
 slidelimit = #slides - 1
 currentslide = slides[1]
 
