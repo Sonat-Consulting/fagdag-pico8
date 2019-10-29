@@ -59,9 +59,12 @@
     - https://en.wikipedia.org/wiki/Taxicab_geometry
     - https://en.wikipedia.org/wiki/Chebyshev_distance
 - Sprite-animasjon
-- Ytelse
+- Avansert tekstrendering
+    - https://www.lexaloffle.com/bbs/?pid=30230&tid=27834
+    - https://www.lexaloffle.com/bbs/?tid=31816
 - Dithering
     - https://trasevol.dog/2017/02/01/doodle-insights-2-procedural-dithering-part-1/
+- Ytelse
 - Trigonometri
 - Entity component systems
 - Lyd/Musikk
