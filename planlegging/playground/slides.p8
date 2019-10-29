@@ -140,6 +140,19 @@ function happy()
 	return makecustomslide("♥♥♥♥♥♥♥♥♥♥♥♥", init, draw)
 end
 
+function bshl(num, spaces)
+	local shifted = num
+	for i=0,spaces - 1 do
+		local mask = 0b1000000000000000
+		local firstbitset = band(mask, shifted) != 0
+		shifted = shl(shifted,1)
+		if firstbitset then
+			shifted = bor(shifted,1)
+		end
+	end
+	return shifted
+end
+
 function colors()
 	local draw = function()
 		cls(7)
@@ -152,8 +165,11 @@ function colors()
 	return makecustomslide("16 colors", nil, draw)
 end
 
+
 function dithering()
+	local t = 0
 	local draw = function()  
+		t += 1
 		cls(7)
 		local blends = {
 			0b1111111111111111,
@@ -195,9 +211,9 @@ function dithering()
 				x += width
 			else
 				for blend in all(blends) do
-				fillp(blend)
-				rectfill(x, y, x + width - 1, y + height - 1, from * 16 + to)
-				x += width
+					fillp(bshl(blend, (t/4)%16))
+					rectfill(x, y, x + width - 1, y + height - 1, from * 16 + to)
+					x += width
 				end
 			end
 			end
