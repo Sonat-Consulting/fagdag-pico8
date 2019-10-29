@@ -8,5 +8,5 @@
 - [ ] Tommy Odland
 - [X] Terje Wiesener
 - [ ] Børge Haugsdal
-- [ ] Kristoffer Lund
+- [ ] _Kristoffer Lund_
 - [ ] Alf Hammerseth
