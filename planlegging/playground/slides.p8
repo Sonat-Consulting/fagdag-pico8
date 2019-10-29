@@ -16,6 +16,12 @@ music(0)
 function buildslides()
 	return {
 		intro(),
+		year1984(),
+		simplergraphics(),
+		simplermemory(),
+		simplertools(),
+		white(),
+		happy(),
 		counter(),
 		credits(),
 		credits2(),	
@@ -30,15 +36,106 @@ function intro()
 		"                              ",
 		"                              ",
 		"-i dag skal vi ta dere tilbake",
+		"           i tid              ",
 		"                              ",
-		"-     til rundt ★r 1984       ",
-		"                              ",
-		"                              ",
+		"-til en era der ting var litt ",
+		"            enklere           ",
 		"                              ",
 		"                              ",
 		"                              ",
 		"                              ",
 	})
+end
+
+function year1984()
+	return makeslide("1984", 
+	{
+		"-       aaret er 1984         ",
+		"-  7-bit ascii er standard    ",
+		"-   dvs ingen norske tegn     ",
+		"- (men heller ingen problemer ",
+		" med idiotiske tegnsett :d )  ",
+		"-(ja utf-16, jeg ser paa deg!)",
+		"  	                           ",
+		"-   vi maatte klare oss med   ",
+		" doble vokaler (ae, oe, aa)   ",
+		"-eller v&re kreative og pr☉ve",
+		" oss frem til det s★ bra ut  ",
+	})
+end
+
+function simplergraphics()
+	return makeslide("grafikk", 
+	{
+		"-    idag er vi bortskjemt    ",
+		"                              ",
+		"- med superraske prosessorer  ",
+		"                              ",
+		"- grafikkort som kan tegne    ",
+		"  milliarder av farger        ",
+		"  	                           ",
+		"- i oppl☉sninger p★ tusener  ",
+		"   av piksler i hver retning  ",
+		" langt oftere enn menneskets  ",
+		"    ☉ye kan oppfatte...       ",
+	})
+end
+
+function simplermemory()
+	return makeslide("minne", 
+	{
+		"- vi har st☉rre cpu cache     ",
+		" enn maskiner fra den tiden   ",
+		" hadde kapasitet p★ disk...   ",
+		"                              ",
+		"- og selv datamaskinen du har ",
+		" i lomma har raskere prosessor",
+		" og uendelig mer lagring enn  ",
+		"    man kunne dr☉mme om da    ",
+		"                              ",
+		"                              ",
+		"                              ",
+	})
+end
+
+function simplertools()
+	return makeslide("verkt☉y", 
+	{
+		"- ikke minst har verkt☉yene   ",
+		" v★re endret seg betraktelig  ",
+		"                              ",
+		"- der det tidligere var vanlig",
+		"    med basic eller assembly  ",
+		"   og direkte manipulering av ",
+		"        minneverdier...       ",
+		"                              ",
+		"- har vi n★ abstraksjoner,    ",
+		"  frameworks, transpilere og  ",
+		"  monads...                   ",
+	})
+end
+
+function white()
+	local draw = function()
+		cls(7)
+	end
+	return makecustomslide("😐😐😐😐😐😐😐😐", nil, draw)
+end
+
+function happy()
+	local t = 0
+	local init = function()
+		t = 0
+	end
+	local draw = function()
+		t += 1
+		cls(7)
+		for i=0,7 do
+			printoutlined("men er vi lykkeligere?", 16 + 10 * cos(t/45 + i/30), 64 + 32*sin(t/90 + i/30), 8 + i)
+		end
+	end
+
+	return makecustomslide("♥♥♥♥♥♥♥♥♥♥♥♥", init, draw)
 end
 
 function counter()
@@ -128,6 +225,24 @@ function makecustomslide(title, init, draw)
 	}
 	return slide
 end
+
+function printoutlined(text, x, y, color)
+	local offsets = {
+		{-1,-1},
+		{-1, 0},
+		{-1, 1},
+		{ 0,-1},
+		{ 0, 1},
+		{ 1,-1},
+		{ 1, 0},
+		{ 1, 1},
+	}
+	for offset in all(offsets) do
+		print(text, x+offset[1], y + offset[2], 0)
+	end
+	print(text, x, y, color)
+end
+
 
 --vars
 headercolour = 5 --dark grey
