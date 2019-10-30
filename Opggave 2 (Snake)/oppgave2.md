@@ -73,3 +73,39 @@ end
 ```
 
 </details>
+
+# Del 2
+
+Dette ble litt smått, la oss skalere det opp litt.
+
+Vi deler opp spillebrettet i 32x32 ruter, hver av disse er da 4 piksler i hver retning. Rute 0,0 ligger øverst til venstre, rute 31,31 ligger nederst til høyre.
+
+For å holde styr på slangens posisjon holder det at vi forholder oss til det nye rutenettet, men for opptegningen må vi oversette mellom rutekoordinater og skjermkoordinater. Selve opptegningen må også oppdateres, her kan du f.eks bruke funksjonen `rectfill(x1,y1,x2,y2,color)`.
+
+For at slangen ikke skal forsvinne så raskt ut fra skjermen kan vi gjøre det slik at vi bare oppdaterer status hver andre eller fjerde frame.
+
+<details>
+<summary>Løsningsforslag</summary>
+
+```lua
+cellsize = 4
+boardsize = 128 / cellsize
+
+function _init()
+	t = 0
+	x = boardsize / 2
+	y = boardsize / 2
+end
+
+function _update()
+	t += 1
+	if t % cellsize != 0 then return end
+	x += 1
+end	
+
+function _draw()
+	cls(0)
+	rectfill(x * cellsize, y * cellsize, (x + 1) * cellsize - 1, (y + 1) * cellsize - 1, 8)
+end 
+```
+</details>
