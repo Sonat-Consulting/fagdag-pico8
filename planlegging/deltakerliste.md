@@ -5,7 +5,7 @@
 - [X] Hadrien Kohl
 - [X] Igor Erokhin
 - [ ] Pavlo Rosiuk
-- [ ] Tommy Odland
+- [X] Tommy Odland
 - [X] Terje Wiesener
 - [ ] Børge Haugsdal
 - [ ] ~~Kristoffer Lund~~

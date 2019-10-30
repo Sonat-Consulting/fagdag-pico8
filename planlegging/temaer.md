@@ -20,6 +20,7 @@
 1. state
     - tables
     - **add()**
+    - **del()**
 1. Input
     - **btn()**
     - **pbtn()**
@@ -29,7 +30,6 @@
 1. Mat
     - **random()**
     - kollisjon mot mat
-    - **del()**
 1. Sprites
 1. Map
 

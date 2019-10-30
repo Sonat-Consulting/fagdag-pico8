@@ -20,11 +20,15 @@ function buildslides()
 		simplergraphics(),
 		simplermemory(),
 		simplertools(),
-		white(),
 		happy(),
+		hwsummary(),
+		picocpu(),
 		colors(),
 		dithering(),
 		counter(),
+		geometry(),
+		andalso(),
+		love(),
 		credits(),
 		credits2(),	
 	}
@@ -117,13 +121,6 @@ function simplertools()
 	})
 end
 
-function white()
-	local draw = function()
-		cls(7)
-	end
-	return makecustomslide("😐😐😐😐😐😐😐😐", nil, draw)
-end
-
 function happy()
 	local t = 0
 	local init = function()
@@ -140,17 +137,66 @@ function happy()
 	return makecustomslide("♥♥♥♥♥♥♥♥♥♥♥♥", init, draw)
 end
 
-function bshl(num, spaces)
-	local shifted = num
-	for i=0,spaces - 1 do
-		local mask = 0b1000000000000000
-		local firstbitset = band(mask, shifted) != 0
-		shifted = shl(shifted,1)
-		if firstbitset then
-			shifted = bor(shifted,1)
-		end
+function hwsummary()
+	return makeslide("typisk spillsystem i dag", 
+	{
+		"- ~4-5Ghz prosessor           ",
+		"- opptil 64 hardware-tr★der   ",
+		"- 64 bit flyttall-aritmetikk  ",
+		"- 16 gb ram                   ",
+		"- 4 GB video ram              ",
+		"- hardware-optimalisert 3D    ",
+		"- 16 777 216 ulike farger     ",
+		"- 3840 x 2160 oppl☉sning      ",		
+		"- 144Hz framerate             ",
+	})
+end
+
+function picocpu()
+	local t = 0
+	local myparticles = {}
+	local init = function()
 	end
-	return shifted
+	local draw = function()
+		cls(0)
+		local speed = 90
+		local x = 64 + 48 * cos(t/speed)
+		local y = 64 + 48 * sin(t/speed)
+		circfill(x, y-2, 3, 8)
+		local spark = make_sparks_ps(x, y)		
+		add(myparticles, spark)
+		local now = time()
+		for ps in all(particle_systems) do 
+			if contains(myparticles, ps) then
+				update_ps(ps, now)
+				draw_ps(ps)
+			end
+		end
+		
+		--cleanup dead particles:
+		for ps in all(myparticles) do
+			if not contains(particle_systems, ps) then
+				del(myparticles, ps)
+			end
+		end
+
+		starty = 48
+		printoutlined("~4 mhZ cpu", 40, starty, 8, 7)
+		printoutlined("32 kb memory", 40, starty + 10, 8, 7)
+		printoutlined("8,16,32 bit word size", 24, starty + 20, 8, 7)
+		printoutlined("16.16 fixed-point math", 24, starty + 30, 8, 7)
+		t += 1
+	end
+	return makecustomslide("pico-8 cpu", init, draw)
+end
+
+function contains(tab, val)
+    for index, value in pairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+    return false
 end
 
 function colors()
@@ -162,7 +208,7 @@ function colors()
 			end
 		end
 	end
-	return makecustomslide("16 colors", nil, draw)
+	return makecustomslide("16 beautiful colors", nil, draw)
 end
 
 
@@ -221,22 +267,112 @@ function dithering()
 		end
 		fillp(0)
 	end
-	return makecustomslide("more with dithering", nil, draw)
+	return makecustomslide("and even more with dithering", nil, draw)
 end
 
 function counter()
-	local mytime = 0
+	local t = 0
 	local init = function()
-		mytime = 0
+		t = 0
 	end
 	local draw = function()
-		mytime += 1
-		print(mytime, 64, 64, 15)
+		t += 1
+		print(t, 64, 64, 15)
 	end
 
-	return makecustomslide("custom slide!", init, draw)
+	return makecustomslide("30 fps refresh!", init, draw)
 end
 
+function geometry()
+	local t = 0
+	local init = function()
+		t = 0
+	end
+	local calcpos = function(t,slice)
+		local x = 64 + 48 * sin(t / 120 + slice / 6)
+		local y = 64 + 48 * cos(t / 120 + slice / 6)
+		return x,y
+	end
+	local draw = function()
+		cls(7)
+
+		local x,y = calcpos(t, 0)
+		circ(x,y,10,8)
+
+		x,y = calcpos(t, 1)
+		circfill(x,y,10,9)
+		
+		x,y = calcpos(t, 2)
+		rect(x-10,y-10,x+10,y+10,10)
+		
+		x,y = calcpos(t, 3)
+		rectfill(x-10,y-10,x+10,y+10,11)
+
+		x,y = calcpos(t, 4)
+		spr(6,x,y)
+		
+		x,y = calcpos(t, 5)
+		palt(0, false)
+		palt(7, true)
+		sspr(0,16,16,8,x,y,16*sin(t/120),8,false,false)
+		palt()
+		t+=1
+	end
+
+	return makecustomslide("geometry and sprites", init, draw)
+end
+
+function andalso()
+	local draw = function()
+		cls(7)
+		printoutlined("and one more thing", 32, 64, 8, 0)
+	end
+
+	return makecustomslide("++++++++", nil, draw)
+end
+
+function love()
+	local t = 0
+	local myparticles = {}
+
+	local init = function()
+	end
+	local draw = function()
+		cls(7)
+		local speed = 90
+		local x = 64 + 64 * cos(t/speed)
+		local y = 96 + 16 * sin(2*t/speed)
+
+		local sprx = 8
+		local spry = 0
+		local sprw = 8
+		local sprh = 8
+		local spark = make_sprites_ps(x,y,sprx,spry,sprw,sprh)	
+		add(myparticles, spark)
+		local now = time()
+		for ps in all(particle_systems) do 
+			if contains(myparticles, ps) then
+				update_ps(ps, now)
+				draw_ps(ps)
+			end
+		end
+		
+		--cleanup dead particles:
+		for ps in all(myparticles) do
+			if not contains(particle_systems, ps) then
+				del(myparticles, ps)
+			end
+		end
+		palt(0, false)
+		palt(14, true)
+		spr(32,x,y,3,1)
+		palt()
+
+		t += 1
+		-- function make_sprites_ps(ex,ey,sprx,spry,sprw,sprh)
+	end
+	return makecustomslide("love", init, draw)
+end
 function credits()
 	return makeslide("credits", 
 	{
@@ -244,12 +380,12 @@ function credits()
 		"        terje wiesener        ",
 		"                              ",
 		"- content, code, presentation ",
-		"         hadrien kohl         ",
-		"         igor erokhin         ",
 		"        terje wiesener        ",
 		"                              ",
 		"-            music            ",
 		"         david fredman        ",
+		"                              ",
+		"                              ",
 		"                              ",
 	})
 end
@@ -312,7 +448,10 @@ function makecustomslide(title, init, draw)
 	return slide
 end
 
-function printoutlined(text, x, y, color)
+function printoutlined(text, x, y, color, bgcolor)
+	if bgcolor == nil then
+		bgcolor = 0
+	end
 	local offsets = {
 		{-1,-1},
 		{-1, 0},
@@ -324,11 +463,23 @@ function printoutlined(text, x, y, color)
 		{ 1, 1},
 	}
 	for offset in all(offsets) do
-		print(text, x+offset[1], y + offset[2], 0)
+		print(text, x+offset[1], y + offset[2], bgcolor)
 	end
 	print(text, x, y, color)
 end
 
+function bshl(num, spaces)
+	local shifted = num
+	for i=0,spaces - 1 do
+		local mask = 0b1000000000000000
+		local firstbitset = band(mask, shifted) != 0
+		shifted = shl(shifted,1)
+		if firstbitset then
+			shifted = bor(shifted,1)
+		end
+	end
+	return shifted
+end
 
 --vars
 headercolour = 5 --dark grey
@@ -558,6 +709,37 @@ function make_starfield_ps()
 	)
 end
 
+function make_sprites_ps(ex,ey,sprx,spry,sprw,sprh)
+	local ps = make_psystem(1,1,0.1,0.5,2,3)
+	
+	add(ps.emittimers,
+		{
+			timerfunc = emittimer_burst,
+			params = { num = 4}
+		}
+	)
+	add(ps.emitters, 
+		{
+			emitfunc = emitter_point,
+			params = { x = ex, y = ey, minstartvx = -1, maxstartvx = 1, minstartvy = 0, maxstartvy=-0 }
+		}
+	)
+	add(ps.drawfuncs,
+		{
+			drawfunc = draw_ps_scalespr,
+			params = { sprx=sprx,spry=spry,sprw=sprw,sprh=sprh }
+		}
+	)
+	add(ps.affectors,
+		{ 
+			affectfunc = affect_force,
+			params = { fx = 0, fy = -0.1 }
+		}
+	)
+	return ps
+end
+
+
 function make_sparks_ps(ex,ey)
 	local ps = make_psystem(0.3,0.7, 1,2,0.5,0.5)
 	
@@ -585,6 +767,7 @@ function make_sparks_ps(ex,ey)
 			params = { fx = 0, fy = 0.3 }
 		}
 	)
+	return ps
 end
 
 -- particle system library -----------------------------------
@@ -810,15 +993,13 @@ function draw_ps_rndspr(ps, params)
 	pal()
 end
 
-
-
-
-
-
-
-
-
-
+function draw_ps_scalespr(ps, params)
+	for p in all(ps.particles) do		
+		local r = (1-p.phase)*p.startsize+p.phase*p.endsize
+		sspr(params.sprx,params.spry,params.sprw,params.sprh,p.x,p.y,params.sprw * r,params.sprw * r)
+	end	
+	pal()
+end
 
 
 __gfx__
@@ -838,14 +1019,14 @@ __gfx__
 00000000077007700770077007700770077000000770077000000000000000000000000077777777778888888888887777777777000000000000000000000000
 00000000077777000770077007777770007777700770077000000000000000000000000077777777778888888888887777777777000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000077777777788888888888888777777777000000000000000000000000
-77777777777777777000000000000000000000000000000000000000000000000000000077777777788778888887788777777777000000000000000000000000
-75555566666555557000000000000000000000000000000000000000000000000000000087777777787777888877778777777777000000000000000000000000
-75555555555555557000000000000000000000000000000000000000000000000000000087777777777777888877777777777778000000000000000000000000
-75505566666555557000000000000000000000000000000000000000000000000000000088777777777777878777777777777778000000000000000000000000
-75000555555555557000000000000000000000000000000000000000000000000000000087777777777777778777777777777788000000000000000000000000
-75505570707585857000000000000000000000000000000000000000000000000000000088777777777777778777777777777778000000000000000000000000
-75555555555555557000000000000000000000000000000000000000000000000000000088777777777777778777777777777788000000000000000000000000
-77777777777777777000000000000000000000000000000000000000000000000000000088877877777777778777777778777788000000000000000000000000
+00000000000000000eeeeeee00000000000000000000000000000000000000000000000077777777788778888887788777777777000000000000000000000000
+05555566666555550eeeeeee00000000000000000000000000000000000000000000000087777777787777888877778777777777000000000000000000000000
+05555555555555550eeeeeee00000000000000000000000000000000000000000000000087777777777777888877777777777778000000000000000000000000
+05505566666555550eeeeeee00000000000000000000000000000000000000000000000088777777777777878777777777777778000000000000000000000000
+05000555555555550eeeeeee00000000000000000000000000000000000000000000000087777777777777778777777777777788000000000000000000000000
+05505570707585850eeeeeee00000000000000000000000000000000000000000000000088777777777777778777777777777778000000000000000000000000
+05555555555555550eeeeeee00000000000000000000000000000000000000000000000088777777777777778777777777777788000000000000000000000000
+00000000000000000eeeeeee00000000000000000000000000000000000000000000000088877877777777778777777778777788000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000088777877777777778777777778777888000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000088878887777777778777777788877788000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000088877887777777778777777788777888000000000000000000000000
