@@ -105,7 +105,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="disclaimer" class="title-slide slide level1"><h1>Disclaimer</h1><div>
 <ul>
-<li>pico-8 games are written in a subset Lua</li>
+<li>pico-8 games are written in a Lua <em>subset</em></li>
 <li>table to Lua is roughly what list is to Lisp</li>
 </ul>
 </div></section>
@@ -120,10 +120,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-8"><a href="#cb1-8"></a><span class="co">-- empty table is not so empty any more</span></span>
 <span id="cb1-9"><a href="#cb1-9"></a></span>
 <span id="cb1-10"><a href="#cb1-10"></a>empty_table<span class="op">.</span>func <span class="op">==</span> empty_table<span class="op">[</span><span class="st">&quot;func&quot;</span><span class="op">]</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a>empty_table<span class="op">:</span>func<span class="op">()</span> <span class="co">-- is the same as empty_table.func(empty_table)</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="kw">local</span> table_as_map <span class="op">=</span> <span class="op">{</span>key <span class="op">=</span> <span class="st">&quot;value&quot;</span><span class="op">}</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a>table<span class="op">.</span>key <span class="op">==</span> <span class="st">&quot;value&quot;</span></span></code></pre></div>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="co">-- is the same as empty_table.func(empty_table)</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>empty_table<span class="op">:</span>func<span class="op">()</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="kw">local</span> table_as_map <span class="op">=</span> <span class="op">{</span>key <span class="op">=</span> <span class="st">&quot;value&quot;</span><span class="op">}</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>table<span class="op">.</span>key <span class="op">==</span> <span class="st">&quot;value&quot;</span></span></code></pre></div>
 </div></section>
 <section id="metatable" class="title-slide slide level1"><h1>metatable</h1><div>
 <ul>
@@ -151,6 +152,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-12"><a href="#cb2-12"></a></span>
 <span id="cb2-13"><a href="#cb2-13"></a><span class="kw">local</span> v <span class="op">=</span> vec<span class="op">:</span>new<span class="op">(</span><span class="dv">1</span><span class="op">,</span><span class="dv">1</span><span class="op">)</span></span>
 <span id="cb2-14"><a href="#cb2-14"></a>length <span class="op">=</span> v<span class="op">:</span>abs<span class="op">()</span></span></code></pre></div>
+</div></section>
+<section id="todos" class="title-slide slide level1"><h1>TODOS</h1><div>
+<ul>
+<li>add benchmarks that lua is a ‘faster’ dynamically typed language</li>
+<li>show examples of iterating over the tables</li>
+<li>iterators/generators</li>
+<li>recommendations for using lua in pico8</li>
+</ul>
 </div></section>
 <section id="coroutines" class="title-slide slide level1"><h1>coroutines</h1><p>TODO</p></section>
 <section id="links" class="title-slide slide level1"><h1>links</h1><div>

@@ -4,7 +4,7 @@
 
 # Disclaimer
 ::: nonincremental
-- pico-8 games are written in a subset Lua
+- pico-8 games are written in a Lua _subset_
 - table to Lua is roughly what list is to Lisp
 :::
 
@@ -21,7 +21,8 @@ empty_table.func = function(echo) return echo end
 -- empty table is not so empty any more
 
 empty_table.func == empty_table["func"]
-empty_table:func() -- is the same as empty_table.func(empty_table)
+-- is the same as empty_table.func(empty_table)
+empty_table:func()
 
 local table_as_map = {key = "value"}
 table.key == "value"
@@ -57,6 +58,15 @@ local v = vec:new(1,1)
 length = v:abs()
 
 ```
+
+:::
+
+# TODOS
+::: nonincremental
+- add benchmarks that lua is a 'faster' dynamically typed language
+- show examples of iterating over the tables
+- iterators/generators
+- recommendations for using lua in pico8
 
 :::
 
