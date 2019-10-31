@@ -139,3 +139,86 @@ function _draw()
 end 
 ```
 </details>
+
+## Del 3
+
+Nå som slangehodet tegnes riktig i det nye rutenettet skal vi legge inn mulighet for å styre det. Vi vil dermed sjekke i `_update()` om retningsknappene er trykket ned, og dersom de er det endre retningen slangen skal bevege seg i. En grei måte å gjøre dette er å dele opp retningen i x- og y- komponent slik at man har variablene `dirx` og `diry`. Hver av disse kan ha verdiene -1,0 eller 1 avhengig av retningen man beveger seg i. Oppdateringen av posisjonen kan da gjøres per komponent også:
+
+```lua
+x += dirx
+y += diry
+```
+
+For å sjekke om en knapp har blitt trykket ned siden sist kan man bruke funksjonen `btnp(buttonid)`. Som buttonid kan man enten sende inn tallverdier eller spesielle symboler (emojis) som representerer retningene og knappene. I PICO-8-editoren finner man retning-emojiene på shift-u (up), shift-d (down), shift-l (left) og shift-r (right). I tillegg finnes shift-x og shift-z som representerer de to knappene på kontrolleren. Om man sitter i en ekstern editor kan man prøve å lime inn en av disse (fungerer i visual studio code på windows):
+
+⬆️⬇️⬅️➡️
+
+Merk: Det kan være smart å skille mellom hvilken retning slangen beveget seg i forrige steg og hvilken vei den skal bevege seg i neste steg. Dette fordi vi vil gjøre det mulig å ombestemme seg inntil neste flytt, og samtidig vil vi at det skal være umulig å snu 180 grader i samme flytt, for da havner vi jo inn i vår egen hale.
+
+I tillegg vil vi gjøre det slik at om slangen beveger seg utenfor brettet så fortsetter den på andre siden, slik at vi slipper å starte på nytt hver gang vi havner utenfor. Her kan på nytt modulo-operatoren `%` være til nytte.
+
+Med dette på plass bør resultatet se noe slikt ut:
+
+![oppgave 2.3](oppgave2_3.gif)
+
+<details>
+<summary>Løsningsforslag</summary>
+
+```lua
+cellsize = 4
+boardsize = 128 / cellsize
+
+function _init()
+	t = 0
+	x = boardsize / 2
+    y = boardsize / 2
+    -- initiell retning:
+	dirx = 1
+    diry = 0
+    movingx = dirx
+    movingy = diry
+end
+
+function checkinput()
+    -- endre (neste) retning avhengig av knappen som ble trykket ned
+    -- merk sjekkene mot moving[x|y] der vi sjekker at man ikke snur
+    -- 180 grader i samme flytt
+    if btn(⬆️) and movingy != 1 then
+        diry = -1
+        dirx = 0
+    elseif btn(⬇️) and movingy != -1 then
+        diry = 1
+        dirx = 0
+    elseif btn(⬅️) and movingx != 1 then
+        dirx = -1
+        diry = 0
+    elseif btn(➡️) and movingx != -1 then
+        dirx = 1
+        diry = 0
+    end
+end		
+
+function move()
+    -- oppdatere x- og y-posisjon, ta høyde for 
+    -- at man beveger seg ut av brettet og inn på andre siden:
+	x = (x + dirx) % boardsize
+    y = (y + diry) % boardsize
+    -- lagre unna retningen for forrige flytt slik at vi kan sjekke mot det i checkinput()
+	movingx = dirx
+	movingy = diry
+end
+
+function _update()
+    t += 1
+    -- vi sjekker input for hver frame selv om vi ikke oppdaterer 
+    -- posisjonen så ofte, dette så vi ikke går glipp av tastetrykk:
+	checkinput()
+	if t % cellsize != 0 then return end
+	move()
+end	
+
+function _draw()
+	cls(0)
+	rectfill(x*cellsize,y*cellsize,(x+1) * cellsize - 1, (y + 1) * cellsize - 1, 8)
+end```
+</details>

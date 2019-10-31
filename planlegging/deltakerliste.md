@@ -7,6 +7,6 @@
 - [ ] Pavlo Rosiuk
 - [X] Tommy Odland
 - [X] Terje Wiesener
-- [ ] Børge Haugsdal
+- [X] Børge Haugsdal
 - [ ] ~~Kristoffer Lund~~
 - [ ] Alf Hammerseth
