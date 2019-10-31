@@ -80,14 +80,34 @@ Dette ble litt smått, la oss skalere det opp litt.
 
 Vi deler opp spillebrettet i 32x32 ruter, hver av disse er da 4 piksler i hver retning. Rute 0,0 ligger øverst til venstre, rute 31,31 ligger nederst til høyre.
 
-For å holde styr på slangens posisjon holder det at vi forholder oss til det nye rutenettet, men for opptegningen må vi oversette mellom rutekoordinater og skjermkoordinater. Selve opptegningen må også oppdateres, her kan du f.eks bruke funksjonen `rectfill(x1,y1,x2,y2,color)`.
+TIPS: Om du tar vare på rutestørrelsen i en egen variabel (f.eks `cellsize`) er det lett å endre den senere. Antal ruter kan beregnes etter
+`numcells = ceil(128 / cellsize)`
 
-For at slangen ikke skal forsvinne så raskt ut fra skjermen kan vi gjøre det slik at vi bare oppdaterer status hver andre eller fjerde frame.
+For å holde styr på slangens posisjon holder det at vi forholder oss til det nye rutenettet, men for opptegningen må vi oversette mellom rutekoordinater og skjermkoordinater. Her kan øvre venstre hjørne på cellen i skjermkoordinater finnes vha formelene 
+`screenx = x * cellsize` og `screeny = y * cellsize`.
 
+Selve opptegningen må også oppdateres, her kan du f.eks bruke funksjonen `rectfill(x1,y1,x2,y2,color)` evt `circfill(x,y,radius, color)`.
+
+For at slangen ikke skal forsvinne så raskt ut fra skjermen skrur vi også ned hastigheten på simuleringen ved at vi bare oppdaterer status hver fjerde frame. Her er modulus-operatoren (`a % b`) veldig kjekk.
+
+Når dette er på plass bør resultatet likne på dette:
+
+![oppgave 2.2](oppgave2_2.gif)
+
+TIPS: Dersom du er usikker på om hodet til slangen er tegnet på rett koordinat eller med riktig størrelse kan denne lille snutten legges inn i `_draw()` for å tegne opp rutenettet:
+
+```lua
+    for x = 0,31 do
+        for y = 0,31 do
+            pset(x*cellsize,y*cellsize,7)
+        end
+    end
+```
 <details>
 <summary>Løsningsforslag</summary>
 
 ```lua
+--disse innstillingene styrer skaleringen av spillet
 cellsize = 4
 boardsize = 128 / cellsize
 
@@ -98,14 +118,24 @@ function _init()
 end
 
 function _update()
-	t += 1
-	if t % cellsize != 0 then return end
-	x += 1
+    t += 1
+
+    -- Vi vil bare oppdatere posisjonen hver cellsize frame. 
+    -- Dette oppnår vi ved å sjekke restverdien fra å dele t på cellsize.
+    -- Restverdien vil nemlig være 0 hver cellsize frame
+    if t % cellsize != 0 then 
+        return 
+    end
+
+    --vi oppdaterer fortsatt bare verdien med 1, men 1 betyr nå 1 celle, ikke 1 piksel:
+	x += 1 
 end	
 
 function _draw()
-	cls(0)
-	rectfill(x * cellsize, y * cellsize, (x + 1) * cellsize - 1, (y + 1) * cellsize - 1, 8)
+    cls(0)
+    -- her må vi gange opp koordinatene med cellsize 
+    -- for å gå fra cellekoordinater til skjermkoordinater:
+    rectfill(x * cellsize, y * cellsize, (x + 1) * cellsize - 1, (y + 1) * cellsize - 1, 8)
 end 
 ```
 </details>
