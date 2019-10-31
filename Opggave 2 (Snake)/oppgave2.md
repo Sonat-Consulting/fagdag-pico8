@@ -680,7 +680,16 @@ function _draw()
 end
 ~~~
 
+</details>
+
 ## Del 7 - grafikk
+
+Her er det fritt frem: Gjør spillet til ditt eget! Lek med farger og former, ta gjerne i bruk sprites. API-funksjonen `spr(spriteid,x,y)` er i så måte veldig nyttig.
 
 ## Del 8 - lyd
 
+Åpne lydeditoren og lag en lydeffekt. Spill av denne hver gang slangen spiser en matbit. Lag gjerne også et fengende soundtrack, eller lån et av soundtrackene David Fredman har laget for oss!
+
+## Del 9 - ekstra spillmekanismer?
+
+Har du ideer til nye mekanismer som kan gjøre spillet mer spennende? En mulighet er for eksempel å ta i bruk map editoren i pico-8 og lage forskjellige brett med ulike hindringer og bonuser.
