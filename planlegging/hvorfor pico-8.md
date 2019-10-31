@@ -108,3 +108,4 @@ What they offer is much more than just another game engine or SDK. They offer cr
 
 
 
+"What (fantasy consoles) offer is much more than just another game engine or SDK. They offer creative communities with their own styles, aesthetics and design philosophies that grow with each new game, each new demo, each new programming feat. All you need to do make an impact, is jump on in.”

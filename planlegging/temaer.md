@@ -53,11 +53,21 @@
 # ANDRE TEMAER
 - Prototype-basert arv
 - Coroutines
+- Trigonometri
+    - Sirkler, posisjonering
+        - Klokke
+    - Repeterende mønstre
+        - Sinus scroller
+        - Plasma
+            - https://lodev.org/cgtutor/plasma.html#RGB_Plasmas_
+            - https://www.bidouille.org/prog/plasma
 - AI, pathfinding (A*) 
     - graphs
     - heuristic
     - https://en.wikipedia.org/wiki/Taxicab_geometry
     - https://en.wikipedia.org/wiki/Chebyshev_distance
+    - Implementation
+        - https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
 - Sprite-animasjon
 - Avansert tekstrendering
     - https://www.lexaloffle.com/bbs/?pid=30230&tid=27834
@@ -65,7 +75,6 @@
 - Dithering
     - https://trasevol.dog/2017/02/01/doodle-insights-2-procedural-dithering-part-1/
 - Ytelse
-- Trigonometri
 - Entity component systems
 - Lyd/Musikk
 - Partikkelsystemer

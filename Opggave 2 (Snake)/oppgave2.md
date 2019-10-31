@@ -344,3 +344,150 @@ end
 
 ```
 </details>
+
+## Del 5 - mat
+
+Nå begynner spillet å ta form, og vi trenger litt innhold. Vi skal legge ut litt mat til slangen, og lage logikken som gjør at slangen vokser seg lengre når den spiser.
+
+Lag funksjonen `spawnfood()` og la den finne en tilfeldig posisjon på brettet for å legge ut maten. Funksjonen må sjekke at posisjonen er ledig, altså at ikke hodet eller deler av halen befinner seg på den ruten. Husk at tallene fra `rnd(max)` er desimaltall og må rundes opp eller ned til heltall.
+
+Lag også funksjonen `drawfood()` som tegner maten. Denne kan gjerne gjenbruke `drawsegment()` fra tidligere.
+
+Til slutt, lag en funksjon `checkcollision()` som sjekker om hodet til slangen befinner seg på samme posisjon som maten. Hvis den gjør det, øk lengden på slangen med 3 og kall `spawnfood()` for å sette ut en ny matbit.
+
+![oppgave 2.5](oppgave2_5.gif)
+
+<details>
+<summary>Løsningsforslag del 5</summary>
+
+```lua
+--init
+cellsize = 4
+boardsize = 128 / cellsize
+
+function _init()
+	t = 0	
+	x = boardsize / 2
+	y = boardsize / 2
+	dirx = 1
+	diry = 0
+	movingx = dirx
+	movingy = diry
+	tail = {}
+    length = 3
+    -- sette ut første matbit:
+	spawnfood()
+end
+
+
+-->8
+--update
+function checkinput()
+	if btn(⬆️) and movingy != 1 then
+		diry = -1
+		dirx = 0
+	elseif btn(⬇️) and movingy != -1 then
+		diry = 1
+		dirx = 0
+	elseif btn(⬅️) and movingx != 1 then
+		dirx = -1
+		diry = 0
+	elseif btn(➡️) and movingx != -1 then
+		dirx = 1
+		diry = 0
+	end
+end		
+
+function move()
+	add(tail, {x = x, y = y})
+	while #tail > length do
+		del(tail, tail[1])
+	end
+
+	x = (x + dirx) % boardsize
+	y = (y + diry) % boardsize
+	movingx = dirx
+	movingy = diry	
+end
+
+function checkcollision()
+    -- hvis hodet er på samme rute som maten skal slangen vokse:
+	if x == foodx and y == foody then
+        length += 3
+        -- vi setter også ut ny mat:
+		spawnfood()
+   end 
+end
+
+function spawnfood()
+    -- merk at vi runder ned tallet fra rnd til nærmeste heltall
+    foodx = flr(rnd(boardsize))
+    foody = flr(rnd(boardsize))
+    while not isempty(foodx,foody) do
+        foodx = flr(rnd(boardsize))
+        foody = flr(rnd(boardsize))
+    end
+end
+
+function isempty(cellx, celly)
+    -- ruten er ikke tom dersom hodet til slangen er der:
+	if cellx == x and celly == y then
+		return false
+    end
+    -- ruten er heller ikke tom dersom et segment i halen er der:
+    for segment in all(trail) do
+        if segment.x == cellx and segment.y == celly then
+            return false
+        end
+    end
+    
+    -- vi fant ingen hindringer, ruten er tom:
+    return true
+end
+	
+
+function _update()
+	t += 1
+	checkinput()
+	if t % cellsize != 0 then 
+		return
+    end
+    -- vi sjekker for kollisjon før vi flytter:
+	checkcollision()
+	move()
+end	
+
+-->8
+--draw
+
+function drawhead()
+	drawsegment(x, y, 8)
+end
+
+function drawtail()
+	for segment in all(tail) do
+		drawsegment(segment.x, segment.y, 11)
+	end
+end
+
+function drawfood()
+    -- vi bruker samme tegnefunksjon bare med en annen farge:
+	drawsegment(foodx, foody, 9)
+end
+
+function drawsegment(x, y, color)
+	rectfill(x * cellsize, 
+		y * cellsize,
+		(x + 1) * cellsize - 1, 
+		(y + 1) * cellsize - 1, 
+		color)
+end
+
+function _draw()
+	cls(7)
+	drawhead()
+	drawtail()
+	drawfood()
+end
+```
+</details>
