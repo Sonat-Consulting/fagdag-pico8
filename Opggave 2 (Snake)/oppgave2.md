@@ -435,7 +435,7 @@ function isempty(cellx, celly)
 		return false
     end
     -- ruten er heller ikke tom dersom et segment i halen er der:
-    for segment in all(trail) do
+    for segment in all(tail) do
         if segment.x == cellx and segment.y == celly then
             return false
         end
@@ -491,3 +491,196 @@ function _draw()
 end
 ```
 </details>
+
+## Del 6 - resterende spill-logikk
+
+Nå skal vi gjøre ferdig spill-mekanismene. Det som gjenstår er:
+
+1. Ved spillets avslutning skal vi skrive ut en melding samt poengsummen. Vi må også slutte å oppdatere spillebrettet.
+1. Spillet er over dersom slangen treffer seg selv
+1. Spillet er over dersom slangen treffer kanten på spillebrettet (kan utelates)
+1. Spillet er vunnet dersom slangen fyller alle ledige ruter på brettet
+
+For det første punktet kan det være greit å holde på en variabel som sier om slangen er i live. Denne variabelen kan vi sjekke før vi oppdaterer posisjoner i `_update()` og også for å se om vi skal skrive ut poengsummen i `_draw()`.
+
+For punkt 2 kan vi utvide `checkcollision()` til å også sjekke om posisjonen til hodet er den samme som et av halesegmentene. Bruk gjerne samme logikk for å sjekke om en rute er tom som i `spawnfood()`.
+
+Punkt 3 er ikke nødvendig, men om du velger å implementere denne mekanismen kan det også gjøres i `checkcollision()`
+
+Punkt 4 er lett å implementere der slangen vokser, men det kan være vanskelig å teste om det er implementert riktig med mindre man er veldig god i snake...
+
+![oppgave 2.6](oppgave2_6.gif)
+
+<details>
+<summary>Løsningsforslag del 6</summary>
+
+~~~lua
+--init
+cellsize = 4
+boardsize = 128 / cellsize
+ignorebounds = true
+
+function _init()
+	t = 0	
+	x = boardsize / 2
+	y = boardsize / 2
+	dirx = 1
+	diry = 0
+	movingx = dirx
+	movingy = diry
+	tail = {}
+	length = 3
+    spawnfood()
+    -- vi setter alive til true fra starten
+	alive = true
+end
+
+
+-->8
+--update
+function checkinput()
+	if btn(⬆️) and movingy != 1 then
+		diry = -1
+		dirx = 0
+	elseif btn(⬇️) and movingy != -1 then
+		diry = 1
+		dirx = 0
+	elseif btn(⬅️) and movingx != 1 then
+		dirx = -1
+		diry = 0
+	elseif btn(➡️) and movingx != -1 then
+		dirx = 1
+		diry = 0
+	end
+end		
+
+function move()
+	add(tail, {x = x, y = y})
+	while #tail > length do
+		del(tail, tail[1])
+	end
+
+	x += dirx
+    y += diry
+    -- bare wrappe rundt dersom vi har ignorebounds = true
+	if ignorebounds then
+		x %= boardsize
+		y %= boardsize
+	end
+	
+	movingx = dirx
+	movingy = diry
+end
+
+function checkcollision()
+	if x == foodx and y == foody then
+		length += 3
+		spawnfood()
+    end
+    -- hvis hodet treffer halen er vi ikke i live
+	if isontail(x,y) then
+		alive = false
+	end
+end
+
+function checkbounds()
+    -- hvis slangen er utenfor brettet er vi ikke i live
+	if x < 0 or x >= boardsize or
+		y < 0 or y >= boardsize then
+		alive = false
+	end
+end
+
+function spawnfood()
+    foodx = flr(rnd(boardsize))
+    foody = flr(rnd(boardsize))
+    while not isempty(foodx,foody) do
+        foodx = flr(rnd(boardsize))
+        foody = flr(rnd(boardsize))
+    end
+end
+
+-- vi skilte ut dette til en egen funksjon så funksjonaliteten kan 
+-- gjenbrukes mellom checkcollision og spawnfood
+function isontail(cellx, celly)
+	for segment in all(tail) do
+        if segment.x == cellx and segment.y == celly then
+            return true
+        end
+    end
+    return false
+end
+
+function isempty(cellx, celly)
+	if cellx == x and celly == y then
+		return false
+	end
+	return not isontail(cellx, celly)
+end
+	
+
+function _update()
+    t += 1
+    -- hvis vi ikke er i live vil et trykk på X starte spillet på nytt
+	if not alive and btnp(❎) then
+		_init()
+		return
+	end
+
+	checkinput()
+	if t % cellsize != 0 then 
+		return
+	end
+	checkcollision()
+	checkbounds()
+    -- ikke oppdatere posisjon hvis vi ikke er i live:
+	if alive then
+        move()
+	end
+end	
+
+-->8
+--draw
+
+function drawhead()
+	drawsegment(x, y, 8)
+end
+
+function drawtail()
+	for segment in all(tail) do
+		drawsegment(segment.x, segment.y, 11)
+	end
+end
+
+function drawfood()
+	drawsegment(foodx, foody, 9)
+end
+
+function drawsegment(x, y, color)
+	rectfill(x * cellsize, 
+		y * cellsize,
+		(x + 1) * cellsize - 1, 
+		(y + 1) * cellsize - 1, 
+		color)
+end
+
+function _draw()
+	cls(7)
+	drawtail()
+	drawhead()
+    drawfood()
+    -- skriv ut poengsum hvis vi ikke er i live:
+	if not alive then
+		cursor(40,50)
+		color(0)
+		print("  game over")
+		print("  score: "..(length / 3) - 1)
+		print("❎ to restart")
+	end
+end
+~~~
+
+## Del 7 - grafikk
+
+## Del 8 - lyd
+
