@@ -15,13 +15,16 @@ music(0)
 
 function buildslides()
 	return {
+		credits(),
+		credits2(),	
 		intro(),
 		year1984(),
 		simplergraphics(),
 		simplermemory(),
 		simplertools(),
-		happy(),
 		hwsummary(),
+		question(),
+		happy(),
 		picocpu(),
 		colors(),
 		dithering(),
@@ -29,8 +32,6 @@ function buildslides()
 		geometry(),
 		andalso(),
 		love(),
-		credits(),
-		credits2(),	
 	}
 end
 
@@ -61,7 +62,7 @@ function year1984()
 		"-   dvs ingen norske tegn     ",
 		"- (men heller ingen problemer ",
 		" med idiotiske tegnsett :d )  ",
-		"-(ja utf-16, jeg ser paa deg!)",
+		"-(ja CP1252, jeg ser paa deg!)",
 		"  	                           ",
 		"-   vi maatte klare oss med   ",
 		" doble vokaler (ae, oe, aa)   ",
@@ -78,7 +79,7 @@ function simplergraphics()
 		"- med superraske prosessorer  ",
 		"                              ",
 		"- grafikkort som kan tegne    ",
-		"  milliarder av farger        ",
+		"     millioner av farger      ",
 		"  	                           ",
 		"- i oppl☉sninger p★ tusener  ",
 		"   av piksler i hver retning  ",
@@ -121,6 +122,23 @@ function simplertools()
 	})
 end
 
+function question()
+	return makeslide("sp☉rsm★let", 
+	{
+		"                              ",
+		"                              ",
+		"                              ",
+		"                              ",
+		"                              ",
+		"- sp☉sm★let er likevel...    ",
+		"                              ",
+		"                              ",
+		"                              ",
+		"                              ",
+		"                              ",
+	})
+end
+
 function happy()
 	local t = 0
 	local init = function()
@@ -130,7 +148,7 @@ function happy()
 		t += 1
 		cls(7)
 		for i=0,7 do
-			printoutlined("men er vi lykkeligere?", 16 + 10 * cos(t/45 + i/30), 64 + 32*sin(t/90 + i/30), 8 + i)
+			printoutlined("er vi lykkeligere?", 16 + 10 * cos(t/45 + i/30), 64 + 32*sin(t/90 + i/30), 8 + i)
 		end
 	end
 
@@ -181,13 +199,12 @@ function picocpu()
 		end
 
 		starty = 48
-		printoutlined("~4 mhZ cpu", 40, starty, 8, 7)
-		printoutlined("32 kb memory", 40, starty + 10, 8, 7)
-		printoutlined("8,16,32 bit word size", 24, starty + 20, 8, 7)
-		printoutlined("16.16 fixed-point math", 24, starty + 30, 8, 7)
+		printoutlined("~4 mhZ 8-bit cpu", 30, starty, 8, 7)
+		printoutlined("32 kb minne", 40, starty + 10, 8, 7)
+		printoutlined("16.16 desimaltall-aritmetikk", 6, starty + 20, 8, 7)
 		t += 1
 	end
-	return makecustomslide("pico-8 cpu", init, draw)
+	return makecustomslide("pico-8 egenskaper", init, draw)
 end
 
 function contains(tab, val)
@@ -208,7 +225,7 @@ function colors()
 			end
 		end
 	end
-	return makecustomslide("16 beautiful colors", nil, draw)
+	return makecustomslide("16 vakre farger", nil, draw)
 end
 
 
@@ -267,7 +284,7 @@ function dithering()
 		end
 		fillp(0)
 	end
-	return makecustomslide("and even more with dithering", nil, draw)
+	return makecustomslide("og enda flere med dithering", nil, draw)
 end
 
 function counter()
@@ -319,13 +336,13 @@ function geometry()
 		t+=1
 	end
 
-	return makecustomslide("geometry and sprites", init, draw)
+	return makecustomslide("tegning av geometry og sprites", init, draw)
 end
 
 function andalso()
 	local draw = function()
 		cls(7)
-		printoutlined("and one more thing", 32, 64, 8, 0)
+		printoutlined("til sist men ikke minst...", 24, 64, 9, 15)
 	end
 
 	return makecustomslide("++++++++", nil, draw)
@@ -369,10 +386,10 @@ function love()
 		palt()
 
 		t += 1
-		-- function make_sprites_ps(ex,ey,sprx,spry,sprw,sprh)
 	end
-	return makecustomslide("love", init, draw)
+	return makecustomslide("enorme mengder glede", init, draw)
 end
+
 function credits()
 	return makeslide("credits", 
 	{
