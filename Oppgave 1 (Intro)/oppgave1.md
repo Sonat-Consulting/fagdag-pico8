@@ -54,11 +54,11 @@ end
 Gå tilbake til konsollet (`ESC`) og kjør programmet, og se på hva som skrives ut.
 
 <details>
-  <summary>Forventet resultat<summary>
+  <summary>Forventet resultat</summary>
 
-  Det bør skrives ut noe slik:
+Det bør skrives ut noe slik:
 
-  ~~~~ 
+~~~~
 utenfor
 init 0
 update 0
@@ -69,10 +69,12 @@ draw 3
 ...
 ~~~~
 
+</details>
+
 Legg merke til at koden utenfor funksjonene blir kjørt aller først, deretter kjøres funksjonen `_init()` nøyaktig 1 gang. Etter det veksler systemet mellom å kalle funksjonene `_update()` og `_draw()`.
 
-Ting vi ønsker å utføre gjentatte ganger i spillets levetid (som å sjekke om knapper er trykket inn, oppdatere posisjoner, tegne ting på skjermen) kan altså plasseres i disse metodene. Det er strengt tatt ikke store forskjeller på `_update()` og `_draw()` i så måte, men dersom man bruker for lang tid på 1 "frame" vil `_update()` kalles oftere og `_draw()` skjeldnere. Det vanlige er å sjekke input, oppdatere spillets interne tilstand og logikk etc i `_update()` og kun gjøre tegning til skjerm i `_draw()`
-</details>
+Ting vi ønsker å utføre gjentatte ganger i spillets levetid (som å sjekke om knapper er trykket inn, oppdatere posisjoner, tegne ting på skjermen) kan altså plasseres i disse funksjonene. Det er strengt tatt ikke store forskjeller på `_update()` og `_draw()` i så måte, men dersom man bruker for lang tid på 1 "frame" vil `_update()` kalles oftere og `_draw()` skjeldnere. Det vanlige er å sjekke input, oppdatere spillets interne tilstand og logikk etc i `_update()` og kun gjøre tegning til skjerm i `_draw()`
+
 
 ## Del 3
 
