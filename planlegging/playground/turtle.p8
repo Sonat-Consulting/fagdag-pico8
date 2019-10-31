@@ -64,10 +64,10 @@ col = 0
 function anim_turtle()
   for i=1,10,1 do  
     col = (i % 4)  + 11
-    forward(64)
+    forward(64 - i * 8)
     turn(0.25)
     col = (i% 4) +3
-    forward(64)
+    forward(56 - i * 8)
     turn(0.25)
   end
 end
