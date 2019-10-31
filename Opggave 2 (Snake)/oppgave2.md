@@ -31,7 +31,7 @@ lagre dette til en ny fil:
 ```
 save oppgave2.p8
 ```
-# Del 1
+# Del 1 - animasjon
 
 Det første vi trenger er en måte å flytte slangens hode fremover automatisk. Vi må også ha en må_te å tegne hodet, slik at vi kan se at flyttingen virker.
 
@@ -50,7 +50,7 @@ Resultatet bør se noe slik ut:
 ![oppgave 2.1](oppgave2_1.gif)
 
 <details>
-<summary>Løsningsforslag</summary>
+<summary>Løsningsforslag del 1</summary>
 
 ```lua
 function _init()
@@ -74,7 +74,7 @@ end
 
 </details>
 
-# Del 2
+# Del 2 - celler / rutenett
 
 Dette ble litt smått, la oss skalere det opp litt.
 
@@ -104,7 +104,7 @@ TIPS: Dersom du er usikker på om hodet til slangen er tegnet på rett koordinat
     end
 ```
 <details>
-<summary>Løsningsforslag</summary>
+<summary>Løsningsforslag del 2</summary>
 
 ```lua
 --disse innstillingene styrer skaleringen av spillet
@@ -140,7 +140,7 @@ end
 ```
 </details>
 
-## Del 3
+## Del 3 - input
 
 Nå som slangehodet tegnes riktig i det nye rutenettet skal vi legge inn mulighet for å styre det. Vi vil dermed sjekke i `_update()` om retningsknappene er trykket ned, og dersom de er det endre retningen slangen skal bevege seg i. En grei måte å gjøre dette er å dele opp retningen i x- og y- komponent slik at man har variablene `dirx` og `diry`. Hver av disse kan ha verdiene -1,0 eller 1 avhengig av retningen man beveger seg i. Oppdateringen av posisjonen kan da gjøres per komponent også:
 
@@ -153,16 +153,16 @@ For å sjekke om en knapp har blitt trykket ned siden sist kan man bruke funksjo
 
 ⬆️⬇️⬅️➡️
 
-Merk: Det kan være smart å skille mellom hvilken retning slangen beveget seg i forrige steg og hvilken vei den skal bevege seg i neste steg. Dette fordi vi vil gjøre det mulig å ombestemme seg inntil neste flytt, og samtidig vil vi at det skal være umulig å snu 180 grader i samme flytt, for da havner vi jo inn i vår egen hale.
+* Merk: Det kan være smart å skille mellom hvilken retning slangen beveget seg i forrige steg og hvilken vei den skal bevege seg i neste steg. Dette fordi vi vil gjøre det mulig å ombestemme seg inntil neste flytt, og samtidig vil vi at det skal være umulig å snu 180 grader i samme flytt, for da havner vi jo inn i vår egen hale.
 
-I tillegg vil vi gjøre det slik at om slangen beveger seg utenfor brettet så fortsetter den på andre siden, slik at vi slipper å starte på nytt hver gang vi havner utenfor. Her kan på nytt modulo-operatoren `%` være til nytte.
+I tillegg vil vi gjøre det slik at om slangen beveger seg utenfor brettet så fortsetter den på andre siden, slik at vi slipper å starte på nytt hver gang vi havner utenfor. Her kan på nytt modulo-operatoren `%` komme til nytte.
 
 Med dette på plass bør resultatet se noe slikt ut:
 
 ![oppgave 2.3](oppgave2_3.gif)
 
 <details>
-<summary>Løsningsforslag</summary>
+<summary>Løsningsforslag del 3</summary>
 
 ```lua
 cellsize = 4
@@ -220,5 +220,127 @@ end
 function _draw()
 	cls(0)
 	rectfill(x*cellsize,y*cellsize,(x+1) * cellsize - 1, (y + 1) * cellsize - 1, 8)
-end```
+end
+```
+</details>
+
+## Del 4 - halen
+
+Nå som vi kan styre slangens hode rundt på brettet skal vi legge på en hale på slangen. Halen skal følge etter hodet slik at alle cellene hodet har vært innom skal berøres av halen ettersom den beveger seg over brettet.
+
+Det finnes flere måter å holde styr på dette, men vi har for for denne oppgaven valgt å holde på alle halens segmenter i en sekvens (en spesiell form for lua-tabell der elementene ikke har en eksplisitt nøkkel / key). Når hodet flytter seg legger vi til den nye posisjonen i sekvensen, og fjerner deretter de eldste posisjonene inntil halen har riktig lengde.
+
+For å opprette en tom sekvens kan man bruke syntakset
+```lua
+tail = {}
+```
+
+API-funksjonene `add(tail, element)` og `remove(tail,element)` kan så brukes for å manipulere sekvensen. For å finne lengden på sekvensen kan man bruke syntakset `#tail`.
+
+* MERK: Lua-sekvenser starter nummereringen fra 1 og ikke 0!
+
+La slangen starte med en initiell lengde på 3, men med en tom sekvens. Skriv logikken som gjør at halen flytter seg etter hodet på spillebrettet. 
+
+Legg også inn funksjonalitet i `_draw()` som tegner halen etter at hodet har blitt tegnet. Det kan være greit å splitte ut tegning av hhv hode og hale i egne funksjoner.
+
+Endre gjerne også bakgrunnsfargen i kallet til `cls(color)` til noe annet enn sort. 
+
+Med dette på plass bør resultatet se omtrent slik ut:
+
+![oppgave 2.4](oppgave2_4.gif)
+
+<details>
+<summary>Løsningsforslag del 4</summary>
+
+```lua
+--init
+cellsize = 4
+boardsize = 128 / cellsize
+
+function _init()
+	t = 0	
+	x = boardsize / 2
+	y = boardsize / 2
+	dirx = 1
+	diry = 0
+	movingx = dirx
+    movingy = diry
+    
+    --vi starter med en tom hale-sekvens og en lengde på 3
+	tail = {}
+	length = 3
+end
+
+
+-->8
+--update
+function checkinput()
+	if btn(⬆️) and movingy != 1 then
+		diry = -1
+		dirx = 0
+	elseif btn(⬇️) and movingy != -1 then
+		diry = 1
+		dirx = 0
+	elseif btn(⬅️) and movingx != 1 then
+		dirx = -1
+		diry = 0
+	elseif btn(➡️) and movingx != -1 then
+		dirx = 1
+		diry = 0
+	end
+end		
+
+function move()
+    -- legg til forrige posisjon i halen
+    add(tail, {x = x, y = y})
+    -- og fjerne eventuelle gamle posisjoner fra halen til den har riktig lengde
+	while #tail > length do
+		del(tail, tail[1])
+	end
+
+	x = (x + dirx) % boardsize
+	y = (y + diry) % boardsize
+	movingx = dirx
+	movingy = diry	
+end
+
+function _update()
+	t += 1
+	checkinput()
+	if t % cellsize != 0 then 
+		return
+	end
+	move()
+end	
+
+-->8
+--draw
+
+function drawhead()
+	drawsegment(x, y, 8)
+end
+
+function drawtail()
+	for segment in all(tail) do
+		drawsegment(segment.x, segment.y, 11)
+	end
+end
+
+function drawsegment(x, y, color)
+    -- her har vi abstrahert bort tegning av et segment 
+    -- slik at samme kode kan brukes både fra drawhead og drawtail
+	rectfill(x * cellsize, 
+		y * cellsize,
+		(x + 1) * cellsize - 1, 
+		(y + 1) * cellsize - 1, 
+		color)
+end
+
+function _draw()
+	cls(7)
+	drawhead()
+	drawtail()
+end
+
+```
 </details>
