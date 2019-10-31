@@ -15,6 +15,7 @@
 - Straight-to-the-metal, slipper tenke på all kompleksiteten nevnt over
 - Enklere system, mindre å forholde seg til
     - Færre fysiske brikker, busser og kontrollere
+    - Vesentlig enklere OS
     - Én person kan teoretisk sett ha full oversikt over hele systemet
 - Mindre API, må gjøre mer fra bunnen av
     - Alg.dat-boken blir nyttig igjen!
@@ -27,10 +28,11 @@
     - Bare se på gamle amiga/c64-demoer!
 
 ## Hvorfor er PICO-8 enda gøyere?
-- Klassiske retro-systemer er tungvinne
+- Klassiske retro-systemer kan være tungvinne
     - Vanskelig å få fatt i hardware
-    - emulator kan være tungvinn å sette opp, dårlig ytelse
+    - Emulator kan være tungvinn å sette opp, dårlig ytelse
     - Ikke gode IDE / verktøy for å utvikle egne spill / programmer
+    - Assembly har høy terskel og BASIC kan oppleves som veldig annerledes fra dagens språk
 - Vesentlig enklere å komme i gang med PICO-8
     - Ferdig installer for de fleste OS
     - Innebygde editorer
@@ -43,39 +45,61 @@
 - Moderne språk 
     - trenger ikke lære seg assembly eller basic
     - innebygde features som tables, metatables, strings, coroutines 
-- Garbage collection, trenger ikke eksplisitt minnehåndtering
+    - Garbage collection, trenger ikke eksplisitt minnehåndtering
 - Stort økosystem der folk deler kode og ideer
-- minimalistisk nok til å være utfordrende, tilgjengelig nok til å være moro
+- Minimalistisk nok til å være utfordrende og fostre kreativitet, tilgjengelig nok til å være moro
 
 ## Liker du konseptet men ikke gjennomføringen i PICO-8?
 - TIC-80
-    - Program carts in Lua, Wren, Moonscript...
-    - 240x136 resolution
-    - customizable 16 color palette
-    - Less restrictive than pico-8
-    - 64 kb code limit
-    - No arbitrary limit on code symbols
+    - Programmere spill i Lua, Wren, Moonscript...
+    - 240x136 oppløsning
+    - konfigurerbar 16-fargers palette
+    - Mindre restriktiv enn pico-8
+    - 64 kb begrensning på kode
+    - Ingen begrensning på antall "tokens"
     - Open source (MIT)
+
 - Script-8
-    - Program carts in Javascript
-    - 128x128 resolution, 8 greyscale levels 
-    - 60 FPS refresh rate
-    - Amazing tooling (better editor, live preview)
+    - Programmere spill i Javascript
+    - 128x128 oppløsning, 8 gråtoner
+    - 60 FPS refresh
+    - Fantastisk tooling (bedre editor, live preview)
+
 - PX-8
-    - Program carts in Python, Lua or Rust (!)
-    - Customizable resolution
-    - Unlimited sprites 
+    - Programmere spill i Python, Lua eller Rust (!)
+    - Konfigurerbar oppløsning
+    - Ubegrenset med sprites
+
 - Pixel Vision 8
-    - Program carts in Lua
-    - Extendable (CPU, Graphics, Memory, Sound etc)
-    - Can be tailored to simulate existing consoles
-    - Full-featured OS with GUI, running on console (amiga-like)
-- FAZIC
-    - Program carts in BASIC!
-    - In development (so far missing a lot of features)
+    - Programmere spill i Lua eller C#
+    - Utvidbar (CPU, Graphics, Memory, Sound etc)
+    - Ferdige maler som likner på historiske konsoller
+        - NES / Famicom
+        - Sega Master System
+        - Gameboy
+        - Game gear
+    - Full-featured OS med GUI (amigaOS-inspirert)
+
+- BASIC8
+    - Programmere spill i BASIC
+    - 160x128 oppløsning, 16 farger, støtte for gjennomsiktighet
+    - Veldig gode kreative verktøy / editorer
+
+- Prism-384
+    - Programmere spill i Javascript ES5.1
+    - 384x216 oppløsning
+    - 5376 farger, alpha blending
+    - 60 FPS
+
 - Chroma-60
-    - Program carts in pure ASM because fuck you
-- Dozens of others!
+    - Programmere spill i ren ASM
+    - Innebygget debugger
+    - 240x135 1-bit display
+        - Kan sette 8 bit (RGB 332) farge for hhv forgrunn og bakgrunn
+        - For å tegne med flere farger samtidig må man endre farge-registeret mens scanline-renderen tegner (!)
+
+- Dusinvis andre varianter
+    - https://github.com/paladin-t/fantasy
 
 
 ## Quotes:
