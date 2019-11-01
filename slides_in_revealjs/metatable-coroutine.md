@@ -25,7 +25,7 @@ a_table.func == a_table["func"]
 a_table:func() -- a_table.func(a_table)
 
 local table_as_map = {key = "value"}
-table.key == "value"
+table_as_map.key == "value"
 ```
 :::
 
@@ -78,7 +78,7 @@ c = a + b
 # coroutines
 ![](./circlecor_0.gif){ width=40% heigth=40% }
 
-# coroutines
+# 
 ::: nonincremental
 ```{.lua .numberLines}
 function anim()
@@ -102,9 +102,7 @@ end
 ::: nonincremental
 - <http://lua-users.org/wiki/MetamethodsTutorial>
 - <http://lua-users.org/wiki/MetatableEvents>
-- <https://www.lua.org/pil/16.html>
 - <https://pico-8.fandom.com/wiki/APIReference>
 - <http://lua.space/general/intro-to-metatables>
-- <https://www.lexaloffle.com/bbs/?tid=3342>
-- <https://pico-8.fandom.com/wiki/Tables>
+- <https://www.lua.org/pil/16.html>
 :::
