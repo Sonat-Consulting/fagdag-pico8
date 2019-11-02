@@ -8,46 +8,21 @@ function _init()
 	t = 0
 	
 	for i=0,15 do
-		pal(i,heatmap[i+1],0)		
+		pal(i,heatmap[i+1],0)
 	end
 
 	settings = {
-	 {
-	 	name="pwidth",
-	 	value=3
-	 },
-	 {
-	 	name="pheight",
-	 	value=3
-	 },
-	 {
-	 	name="numx",
-	 	value=41
-	 },
-	 {
-	 	name="numy",
-	 	value=41
-	 },
-	 {
-	 	name="dx",
-	 	value=2
-	 },
-	 {
-	 	name="dy",
-	 	value=2
-	 },
-	 {
-	 	name="f1",
-	 	value=1
-	 },
-	 {
-	 	name="f2",
-	 	value=1
-	 },
-	 {
-	 	name="f3",
-	 	value=2
-	 },
+		{"pwidth", 1},
+		{"pheight",2},
+	   	{"numx",64},
+	 	{"numy",32},
+	 	{"startx",0},
+	 	{"starty",0},
+	 	{"f1",1},
+	 	{"f2",1},
+	 	{"f3",2},
+		{"borderx", 1},
+		{"bordery",2},
 	}
 	menucount = #settings
 		
@@ -58,15 +33,17 @@ function _init()
 end
 
 function readconfig()
-	pw = settings[1].value
-	ph = settings[2].value
-	numx = settings[3].value
-	numy = settings[4].value	
-	dx = settings[5].value
-	dy = settings[6].value
-	f1 = settings[7].value
-	f2 = settings[8].value
-	f3 = settings[9].value
+	pw = settings[1][2]
+	ph = settings[2][2]
+	numx = settings[3][2]
+	numy = settings[4][2]	
+	startx = settings[5][2]
+	starty = settings[6][2]
+	f1 = settings[7][2]
+	f2 = settings[8][2]
+	f3 = settings[9][2]
+	borderx = settings[10][2]
+	bordery = settings[11][2]
 	f = (f1 + f2 + f3)
 end
 
@@ -78,11 +55,11 @@ function _update()
 	 selected = max(1, selected)
 	 selected = min(menucount, selected)
 	 if btnp(⬅️) then 
-	 	settings[selected].value -= 1 
+	 	settings[selected][2] -= 1 
 	 	readconfig()
 	 	end
 	 if btnp(➡️) then 
-	 	settings[selected].value += 1
+	 	settings[selected][2] += 1
 	 	readconfig()
 	 end
 	end	
@@ -110,7 +87,7 @@ function drawmenu()
 	
 	for i=1,menucount do
 		local setting = settings[i]
- 		print(setting.name..": "..setting.value)
+ 		print(setting[1]..": "..setting[2])
 	 end
 	 
 	 for i=0,15 do
@@ -122,21 +99,25 @@ end
 -->8
 
 function plasma() 
-	local t1 = t / 128
+	local t1 = t / 97
+	local t2 = t / 113
+	local t3 = (t % (137*4)) / 137
 	local cost3 = cos(t1/3)
 	local sint = sin(t1)
-	local sint4 = sin(t1/4)
+	local sint4 = sin(t3/4)
+	local cost4 = cos(t3/4)
 
 	local pre = {}
 
 	for x=0,numx do
 		local col = {}
-		col.px = x * pw + dx
-		col.px2 = col.px + pw - 2
+		col.px = startx + x * (pw + borderx)
+		col.px2 = col.px + pw - 1
 		col.x1 = col.px / 128
+		col.x2 = col.px / 512
 		col.v = 0
 		col.xsint = x * sint
-		col.cx2 = col.x1 + sint4
+		col.cx2 = col.x2 + sint4
 		col.cx2 *= col.cx2
 
 		if f1 > 0 then
@@ -148,23 +129,23 @@ function plasma()
 
 	local factor = 15.5 / (2 * f)
 
-	for y=0,numy do
-		local py = y * ph + dy
-		local py2 = py + ph - 2
-		local y1 = py / 128
+	for y=0,numy-1 do
+		local py = starty + y * (ph + bordery)
+		local py2 = py + ph - 1
+		local y1 = py / 512
 		local ycost = py * cost3
-		local cy2 = y1 + cost3
+		local cy2 = y1 + cost4
 		cy2 *= cy2
 
-		for x=0,numx do
+		for x=0,numx-1 do
 			col = pre[x + 1]
 			v = col.v
 			if f2 > 0 then
-				v += sin((col.xsint + ycost) / 64 + t1)
+				v += sin((col.xsint + ycost) / 64 + t2)
 			end
 
 			if f3 > 0 then
-				v += sin(sqrt(col.cx2 + cy2 + t1))
+				v += sin((col.cx2 + cy2 -0.6 )^0.5)
 			end
 
 			rectfill(
