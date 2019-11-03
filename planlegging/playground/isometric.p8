@@ -13,7 +13,7 @@ function _init()
     coords = {}
     for y=0,num-1 do
         for x=0,num-1 do 
-            coord = {[0] = x * 4, 0, y * 4}
+            coord = {x * 4, 0, y * 4}
             add(coords, coord)
         end
     end
@@ -22,9 +22,9 @@ function _init()
     sqrt2 = 2 ^ 0.5
     sqrt6 = 6 ^ 0.5
 
-    isomatrix = {[0]=sqrt3, 0, -sqrt3,
-                     1, 2, 1,
-                     sqrt2, -sqrt2, sqrt2}
+    isomatrix = {sqrt3, 0, -sqrt3,
+                1, 2, 1,
+                sqrt2, -sqrt2, sqrt2}
 
     t = 0
 
@@ -40,37 +40,37 @@ function _update()
         for x=0,num-1 do
             local coord = coords[y * num + x + 1]
             local wave1 = cos(2 * x / num  + t/60)
-            coord[1] = wave1 * 6
-            coord[3] = 1 + wave1
+            coord[2] = wave1 * 6
+            coord[4] = 1 + wave1
         end
     end
     t += 1    
 end
 
 function transformvector(vector3, matrix3x3)
-    local transformed = {[0] = 0,0,0}
-    for newrow=0,2 do
-        for col=0,2 do
-            transformed[newrow] += vector3[col] * matrix3x3[newrow * 3 + col]
+    local transformed = {0,0,0}
+    for newrow=1,3 do
+        for col=1,3 do
+            transformed[newrow] += vector3[col] * matrix3x3[(newrow - 1) * 3 + col]
         end
     end
     return transformed
 end
 
 function multvector(vector3, val)
-    return {[0] = vector3[0] * val, vector3[1] * val, vector3[2] * val}
+    return {vector3[1] * val, vector3[2] * val, vector3[3] * val}
 end
 
 function vectortostring(vector3)
-    return "("..vector3[0]..","..vector3[1]..","..vector3[2]..")"
+    return "("..vector3[1]..","..vector3[2]..","..vector3[3]..")"
 end
 
 function isometric(coord)
     local transformed = transformvector(coord, isomatrix)
-    local projected = {[0] = transformed[0], transformed[4], 0}
+    local projected = {transformed[1], transformed[5], 0}
     local scaled = multvector(transformed, 1 / sqrt6)
-    scaled[0] += 64
-    scaled[1] += 16
+    scaled[1] += 64
+    scaled[2] += 16
     return scaled
 end
 
@@ -82,8 +82,8 @@ function _draw()
     local count = 0
     for c in all(coords) do
         local i = isometric(c)
-        local col = numcolors - (c[3] * numcolors / 2)
-        pset(i[0], i[1], col)
+        local col = numcolors - (c[4] * numcolors / 2)
+        pset(i[1], i[2], col)
         count+=1
     end
 end
