@@ -9,7 +9,7 @@ palette = {[0]=129,1,131,140,12,7}
 numcolors = 6
 
 function _init()
-    num = 28
+    num = 24
     coords = {}
     for y=0,num-1 do
         for x=0,num-1 do 
@@ -22,7 +22,7 @@ function _init()
     sqrt2 = 2 ^ 0.5
     sqrt6 = 6 ^ 0.5
 
-    isometricvector = {[0]=sqrt3, 0, -sqrt3,
+    isomatrix = {[0]=sqrt3, 0, -sqrt3,
                      1, 2, 1,
                      sqrt2, -sqrt2, sqrt2}
 
@@ -66,7 +66,7 @@ function vectortostring(vector3)
 end
 
 function isometric(coord)
-    local transformed = transformvector(coord, isometricvector)
+    local transformed = transformvector(coord, isomatrix)
     local projected = {[0] = transformed[0], transformed[4], 0}
     local scaled = multvector(transformed, 1 / sqrt6)
     scaled[0] += 64
@@ -76,7 +76,9 @@ end
 
 function _draw()
     cls(14)
-    print(stat(0), 4, 4, 15)
+    color(15)    
+    print(stat(0))
+    print(stat(1))
     local count = 0
     for c in all(coords) do
         local i = isometric(c)
